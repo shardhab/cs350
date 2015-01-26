@@ -1,0 +1,300 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{parskip}
+\usepackage{enumerate}
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass\ (\hmwkClassInstructor): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#3}
+\newcommand{\hmwkDueDate}{January 29, 2015}
+\newcommand{\hmwkClass}{CS350 - Algorithms}
+\newcommand{\hmwkClassInstructor}{Professor Andrew Black}
+\newcommand{\hmwkAuthorName}{Kristina Frye}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 3:10pm}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor}}
+    \vspace{3in}
+}
+
+\author{\textbf{\hmwkAuthorName}}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+    A network topology is a specification of how devices (computers,
+    printers, etc.) are connected in a network. The figures below show two 
+    different network topologies: star, and fully-connected.
+    For each of these topologies, design a brute-force algorithm that 
+    determines if a given graph has that topology. Assume $n > 3$, and that the 
+    input is an adjacency matrix of 1 and 0 values. Do not assume that the 
+    input matrix represents an undirected graph. Indicate time the efficiency 
+    class of your algorithm — show your work.
+
+    \textbf{Solution: Star Topology}
+        \begin{algorithmic}
+            \Function{IsStarTopology}{$A[0..n][0..n]$}
+                \State $key = -1$ \Comment{1 op}
+                \For{$i:=0 \text{ to } n$}
+                    \State $count = 0$ \Comment{1 op}
+                    \For{$j:=0 \text{ to } n$}
+                        \State $count = count + 1$  
+                        \Comment{Count how many nodes are connected (1 op)}
+                    \EndFor
+                    \If{$count = n - 1$} 
+                        \Comment{Central node identified (1 op)}
+                        \If{$key = -1$} \Comment{1 op}
+                            \State $key = i$  \Comment{1 op}
+                        \Else
+                            \State \textbf{return false} 
+                            \Comment{There can be only one central node} 
+                        \EndIf
+                    \Else
+                        \If{$count \neq 1$}
+                            \Comment{All non-central nodes must have count of 1}
+                            \State \textbf{return false}
+                        \EndIf
+                    \EndIf 
+                \EndFor
+                \If{$key = -1$}
+                    \Comment{There must be a central node (1 op)}
+                    \State \textbf{return false}
+                \EndIf
+                \For{$i:=0 \text{ to } n$}
+                    \Comment{Check for connection to identified central node}
+                    \If{A[i][key] = 0 \text{ AND } $i \neq key$}
+                        \Comment{2 op}
+                        \State \textbf{return false}
+                    \EndIf
+                \EndFor
+                \State \textbf{return true}
+            \EndFunction{}
+    \end{algorithmic}
+    Time efficency calculated assuming that additions and comparisons are
+    counted as operations. Operations involved in for loops (additions and
+    comparisons) are ignored since they will just add constants to the
+    total sum of operation calculations and won't affect the efficiency 
+    class. Worst-case operations are indicated in the comments shown in the 
+    algorithm. 
+   
+    \begin{align*} 
+        ops(n) &= 2 + \left( \sum_{i=0}^{n-1} 4 + \sum_{j=0}^{n-1} 1 \right) + 
+        \sum_{i=0}^{n-1} 2 \\
+        &= 2 + \left(\sum_{i=0}^{n-1} 4 + n\right) + 2 \cdot n\\
+        &= 2 + 4 \cdot \left(\sum_{i=0}^{n-1} 1\right) + 
+           n \cdot \left(\sum_{i=0}^{n-1} 1 \right) + 2 \cdot n\\
+        &= 2 + 4n + n \cdot n + 2n\\
+        &= 2 + 6n + n^2 \\
+        &\in O(n^2) 
+    \end{align*} 
+  
+    \textbf{Solution: Fully-Connected Topology}
+    \begin{algorithmic}
+        \Function{IsFullyConnected}{$A[0..n][0..n]$}
+            \For{$i:=0 \text{ to } n$}
+                \State $count = 0$ \Comment{1 op}
+                \For{$j:=0 \text{ to } n$}
+                    \State $count = count + A[i,j]$ 
+                    \Comment{Count how many nodes are connected (1 op)}
+                \EndFor
+                    \Comment{There should be $n-1$ connected nodes and
+                             a node should not be connected to itself}
+                \If{$count \neq n - 1 \text{ OR } A[i,i] \neq 0$ }
+                    \Comment{2 op}
+                    \State \textbf{return false}
+                \EndIf
+            \EndFor
+            \State \textbf{return true}
+        \EndFunction
+    \end{algorithmic}
+    Time efficiency (same assumptions as before):
+    \begin{align*}
+        ops(n) &= \left( \sum_{i=0}^{n-1} 1 + \left( 
+        \sum_{j=0}^{n-1} 1\right) + 2 \right)\\
+        &= \sum_{i=0}^{n-1} 1 + n + 2 \\
+        &= \sum_{i=0}^{n-1} 1 + n \cdot \sum_{i=0}^{n-1} 1 + 
+           2 \cdot \sum_{i=0}^{n-1} 1\\
+        &= n + n \cdot n + 2 \cdot n\\
+        &= 3n + n^2\\
+        &\in O(n^2) 
+    \end{align*} 
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+A stack of fake coins There are $n$ stacks of $n$ identical-looking coins. 
+All of the coins in one of these stacks are counterfeit, while all the coins 
+in the other stacks are genuine. Every genuine coin weighs 10 grams; every fake 
+weighs 11 grams. You have an analytical scale that can determine the exact 
+weight of any number of coins.
+\begin{enumerate}[(a)]
+    \item Devise a brute-force algorithm to identify the stack with the fake 
+          coins, and 
+        \begin{algorithmic}
+            \Function{IndexOfFakeCoins}{$A[0..n-1]$}
+                \Comment{Array of $n$ stacks of $n$ coins}
+                \For{$i:=0 \text{ to } n-1$}
+                    \If{$weight = 11n$}
+                        \State return $i$
+                    \EndIf
+                \EndFor
+             \EndFunction
+        \end{algorithmic}
+    \item determine its worst-case efficiency class:\\
+    Basic operation = weight function. Worst case: last stack\\
+    \[
+        ops(n) = \sum_{i=0}^{n-1} 1 = n \in O(n)
+    \]
+\end{enumerate}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+Alternating disks You have a row of 2n disks of two colors, $n$ dark and $n$ 
+light. They alternate: dark, light, dark, light, and so on. You want to get 
+all the dark disks to the right-hand end, and all the light disks to the 
+left-hand end. The only moves you are allowed to make are those that 
+interchange the positions of two neighboring disks. Design an algorithm for 
+solving this puzzle and determine the number of moves it makes.
+
+\textbf{Solution:}
+\begin{algorithmic}
+    \Function{SortDisks}{$A[0..2n-1]$}
+        \For{$i:=0 \text{ to } n - 1$}
+            \Comment{Array should be sorted after halfway through}
+            \For{$j:=i \text{ to } n - 1 - i$}
+                \Comment{Only need to check every other index}
+                \If{$A[i + 2j] = D \text{ AND } A[i + 2j + 1] = L$}
+                    \State $flip(A[i + 2j], A[i + 2j + 1])$
+                \EndIf 
+            \EndFor
+        \EndFor
+    \EndFunction
+\end{algorithmic}
+Basic operation: flip
+\begin{align*}
+    ops(n) &= \sum_{i=0}^{n-1} \sum_{j=0}^{n - 1 - i} 1\\
+    &= \sum_{i=0}^{n-1} n - 1 - i + 1 = \sum_{i=0}^{n-1} n - i\\
+    &= \sum_{j=1}^{n} j = \frac{n(n+1)}{2}\\
+    &\in O(n^2)
+\end{align*}
+\end{homeworkProblem}
+\end{document}
