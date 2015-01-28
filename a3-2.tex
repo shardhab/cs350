@@ -100,7 +100,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 3:10pm}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
     \vspace{0.1in}\large{\textit{\hmwkClassInstructor}}
     \vspace{3in}
 }
@@ -141,6 +141,172 @@
 
 \pagebreak
 
+\begin{homeworkProblem}
+Compute the following sums:
+\begin{enumerate}[(a)]
+\item
+$\displaystyle\sum_{i=0}^{n+2}i(i + 1)$
+\begin{align*}
+\sum_{i=0}^{n+2}i(i + 1) &=\sum_{i=0}^{n+2}i^2 + i =
+\sum_{i=0}^{n+2}i^2 + \sum_{i=0}^{n+2}i \\
+&=\frac{n(n+1)(2n + 1)}{6} + (n+1)^2 + (n+2)^2 +
+\frac{n(n+1)}{2} + (n+1) + (n+2)\\
+&=\frac{2n^3 + 3n^2 + n}{6} + (n^2 + 2n + 1) + (n^2 + 4n + 4) +
+\frac{n^2 + n}{2} + (n + 1) + (n + 2)\\
+&=\frac{2n^3 + 3n^2 + n}{6} +
+\frac{6(2n^2 + 6n + 5)}{6} + \frac{n^2 + n}{2} +
+\frac{2(2n + 3)}{2}\\
+&=\frac{2n^3 + 15n^2 + 37n + 30}{6} + \frac{n^2 + 5n + 6}{2}\\
+&=\frac{2n^3 + 15n^2 + 37n + 30}{6} + \frac{3n^2 + 15n + 18}{6}\\
+&=\frac{2n^3 + 18n^2 + 52n + 48}{6}
+\end{align*}
+\item
+$\displaystyle\sum_{j=1}^{n}3^{j+2}$
+\begin{align*}
+\sum_{j=1}^{n}3^{j+2} &= \sum_{j=1}^{n}3^2 3^j = 3^2\sum_{j=1}^{n}3^j
+= 3^2 \cdot \frac{3^{n+1}-1}{2} - 1
+= 3^2 \cdot \frac{3^{n+1}-1-2}{2}
+= 3^2 \cdot \frac{3^{n+1}-3}{2}
+= \frac{3^{n+3} - 3^3}{2}\\
+&= \frac{3^{n+3} - 27}{2}
+\end{align*}
+
+\item
+$\displaystyle\sum_{i=1}^{n}\sum_{j=1}^{n}ij$
+\begin{align*}
+\sum_{i=1}^{n}\sum_{j=1}^{n}ij &=
+\sum_{i=1}^{n}i\sum_{j=1}^{n}j =
+\sum_{i=1}^{n}i \frac{n(n+1)}{2} =
+\frac{n(n+1)}{2} \sum_{i=1}^{n}i =
+\frac{n(n+1)}{2} \frac{n(n+1)}{2} = 
+\frac{1}{4} n^2(n+1)^2\\
+&= \frac{1}{4} n^2(n^2 + 2n + 1) =
+\frac{1}{4} \left(n^4 + 2n^3 + n^2\right)
+\end{align*}
+\end{enumerate}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\begin{algorithmic}
+\Procedure{Secret}{$A[0..n-1]$}\Comment{An array $A[0..n-1]$ of $n$ real numbers}
+\State $minval \gets A[0]; maxval \gets A[0]$
+\For{$i = 1 \text{ to } n-1$}
+\If{$A[i] < minval$}
+\State $minval \gets A[i]$
+\EndIf
+\If{$A[i] > maxval$}
+\State $maxval \gets A[i]$
+\EndIf
+\EndFor
+\State \textbf{return} $maxval - minval$
+\EndProcedure
+\end{algorithmic}
+\begin{enumerate}[(a)]
+\item What does this algorithm do? \textbf{A: } It computes the difference
+between the maximum and minimum value of the array of numbers (the range).
+\item What is its basic operation \textbf{A: } The comparison operator ($<$ and $>$).
+\item How many times is the basic operation executed in the best and
+worst cases? \textbf{A: } The best case is the same as the worse case.
+For all cases, each element needs to be checked once; there is no way to
+short circuit this algorithm (assuming there are no absolute min or max
+values.) The comparison is performed twice for each loop from 
+$i = 1$ to $n-1$. Therefore, it is performed $2 \cdot (n-2)$ times. 
+
+\item What is the efficiency class of this algorithm? \textbf{A: }
+$O(n)$ (linear)
+\end{enumerate}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+Solve the following recurrence relations, using backwards substitution,
+or by calculating the first few terms and generalizing.
+\begin{enumerate}[(a)]
+\item $x(n) = 4 x(n-1) \text{ for } n > 1, x(1) = 2$
+\begin{align*}
+x(n) &= 4 \cdot x(n-1) \\
+\implies x(n-1) &= 4 \cdot x(n-2)\\
+\implies x(n) &= 4 \cdot 4 \cdot x(n-2)\\
+\implies x(n) &= 4^k \cdot x(n-k)\\
+\text{Let }k=n-1. \text{ Then: }
+x(n) &= 4^{n-1} \cdot x(n-(n-1))\\
+&= 4^{n-1} \cdot x(1)\\
+&= 4^{n-1} \cdot 2\\
+\implies x(n) &= 2 \cdot 4^{n-1}
+\end{align*}
+
+\item $x(n) = x(n-1) + n \text{ for } n > 0, x(0) = 3$
+\begin{align*}
+x(n) &= x(n-1) + n\\
+\implies x(n-1) &= x(n-2) + n-1\\
+\implies x(n) &= x(n-2) + (n-1) + n\\
+\implies x(n) &= x(n-k) + \sum_{k=0}^{n-1}n-k\\
+\implies x(n) &= x(n-k) + \sum_{j=1}^{n}j\\
+\implies x(n) &= x(n-k) + \frac{n(n+1)}{2}\\
+\text{Let }k=n. \text{ Then: }
+x(n) &= x(n-n) + \frac{n(n+1)}{2}\\
+\implies x(n) &= 3 + \frac{n(n+1)}{2}\\
+\implies x(n) &= \frac{n^2 + n + 6}{2}\\
+\end{align*}
+\item $x(n) = x(n/3) + 1 \text{ for } n > 1, x(1) = 1 \text{ (solve for }
+n = 3k)$
+\begin{align*}
+x(n) &= x\left(\frac{n}{3}\right) + 1\\
+\implies x\left(\frac{n}{3}\right) &= x\left(\frac{n}{9}\right) + 1\\
+\implies x(n) &= x\left(\frac{n}{9}\right) + 1 + 1\\
+\implies x(n) &= x\left(\frac{n}{3^k}\right) + k\\
+\text{Let }n=3k. \text{ Then: }
+x\left(3^k\right) &= x\left(\frac{3^k}{3^k}\right) + \log_3 3^k\\
+&= 1 + \log_3 n\\
+\implies x(n) &= 1 + \log_3 n \text{ where } n = 3^k
+\end{align*}
+\end{enumerate}
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+Consider this algorithm for $min$; it recursively divides the input array
+$A$ into two halves:
+\begin{algorithm}
+\begin{algorithmic}
+\Procedure{Min2}{$A[l..r]$}
+\If{$l=r$}
+\State return $A[l]$
+\EndIf
+\State $mid \gets \left \lfloor\frac{l + r}{2}\right \rfloor$
+\State $temp1 \gets Min2(A[l..mid])$
+\State $temp2 \gets Min2(A[mid+1..r])$
+\If{$temp1 \le temp2$}
+\State return $temp1$
+\Else
+\State return $temp2$
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{enumerate}[(a)]
+\item What is this Algorithm’s basic operation?
+\textbf{ A: }
+The division operation $\frac{l + r}{2}$.
+\item Set up a recurrence relation for $B(n)$, the number of times that
+the basic operation is executed on an input array of size $n$, and
+\textbf{ A: }
+$B(n) = 2 \cdot B\left(\frac{n}{2}\right) + 1, B(1) = 0, n > 0$
+\item solve it
+\begin{align*}
+B(n) &= 2 \cdot B\left(\frac{n}{2}\right) + 1\\
+\implies B\left(\frac{n}{2}\right) &= 2 \cdot B\left(\frac{n}{4}\right) + 1\\
+\implies B(n) &= 2 \cdot \left(2 \cdot B\left(\frac{n}{4}\right) + 
+    1\right) + 1\\
+\implies B(n) &= 2 \cdot 2 \cdot B\left(\frac{n}{4}\right) + 2 + 1\\
+\implies B(n) &= 2^k B\left(\frac{n}{2^k}\right) + 
+    \sum_{j=0}^{k-1}2^j\\
+\implies B(n) &= 2^k B\left(\frac{n}{2^k}\right) + 2^{k} - 1\\
+\text{Let } n = 2^k. \text{ Then: }
+B(n) &= n \cdot B\left(\frac{n}{n}\right) + n - 1 \\
+B(n) &= n - 1
+\end{align*}
+\end{enumerate}
+\end{homeworkProblem}
+\pagebreak
 \begin{homeworkProblem}
     A network topology is a specification of how devices (computers,
     printers, etc.) are connected in a network. The figures below show two 
@@ -192,10 +358,10 @@
     \end{algorithmic}
     Time efficency calculated assuming that additions and comparisons are
     counted as operations. Operations involved in for loops (additions and
-    comparisons) are ignored since they will just add constants to the
-    total sum of operation calculations and won't affect the efficiency 
-    class. Worst-case operations are indicated in the comments shown in the 
-    algorithm. 
+    comparisons) are ignored since they will just add a constant to the
+    total sum of operation calculations, are incidental to the algorithm,
+    and won't affect the efficiency class. Worst-case operations are 
+    indicated in the comments shown in the algorithm. 
    
     \begin{align*} 
         ops(n) &= 2 + \left( \sum_{i=0}^{n-1} 4 + \sum_{j=0}^{n-1} 1 \right) + 
@@ -239,7 +405,7 @@
         &\in O(n^2) 
     \end{align*} 
 \end{homeworkProblem}
-
+\pagebreak
 \begin{homeworkProblem}
 A stack of fake coins There are $n$ stacks of $n$ identical-looking coins. 
 All of the coins in one of these stacks are counterfeit, while all the coins 
