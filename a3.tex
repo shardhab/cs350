@@ -90,7 +90,7 @@
 \newcommand{\hmwkTitle}{Homework\ \#3}
 \newcommand{\hmwkDueDate}{January 29, 2015}
 \newcommand{\hmwkClass}{CS350 - Algorithms}
-\newcommand{\hmwkClassInstructor}{Professor Andrew Black}
+\newcommand{\hmwkClassInstructor}{for Professor Andrew Black}
 \newcommand{\hmwkAuthorName}{Kristina Frye}
 
 %
@@ -319,25 +319,26 @@ B(n) &= n - 1
 
     \textbf{Solution: Star Topology}
         \begin{algorithmic}
-            \Function{IsStarTopology}{$A[0..n][0..n]$}
+            \Function{IsStarTopology}{$A[0..n-1][0..n-1]$}
                 \State $key = -1$ \Comment{1 op}
-                \For{$i:=0 \text{ to } n$}
+                \For{$i:=0 \text{ to } n-1$}
                     \State $count = 0$ \Comment{1 op}
-                    \For{$j:=0 \text{ to } n$}
-                        \State $count = count + 1$  
+                    \For{$j:=0 \text{ to } n-1$}
+                        \State $count = count + A[i][j]$ 
                         \Comment{Count how many nodes are connected (1 op)}
                     \EndFor
                     \If{$count = n - 1$} 
                         \Comment{Central node identified (1 op)}
                         \If{$key = -1$} \Comment{1 op}
-                            \State $key = i$  \Comment{1 op}
+                            \State $key = i$ 
                         \Else
                             \State \textbf{return false} 
                             \Comment{There can be only one central node} 
                         \EndIf
                     \Else
                         \If{$count \neq 1$}
-                            \Comment{All non-central nodes must have count of 1}
+                            \Comment{All non-central nodes must have count of 
+                              1 (1 op)}
                             \State \textbf{return false}
                         \EndIf
                     \EndIf 
@@ -346,13 +347,19 @@ B(n) &= n - 1
                     \Comment{There must be a central node (1 op)}
                     \State \textbf{return false}
                 \EndIf
-                \For{$i:=0 \text{ to } n$}
+                \For{$i:=0 \text{ to } n-1$}
                     \Comment{Check for connection to identified central node}
-                    \If{A[i][key] = 0 \text{ AND } $i \neq key$}
-                        \Comment{2 op}
+                    \If{$A[i][key] = 0 \text{ AND } i \neq key$}
+                        \Comment{Check each node is connected
+                          to the central node (2 op)} 
                         \State \textbf{return false}
                     \EndIf
                 \EndFor
+                    \If{$A[key][key] \neq 0$}
+                        \Comment{Check the central node is not connected
+                          to itself (1 op)}
+                        \State \textbf{return false}
+                    \EndIf
                 \State \textbf{return true}
             \EndFunction{}
     \end{algorithmic}
@@ -360,26 +367,27 @@ B(n) &= n - 1
     counted as operations. Operations involved in for loops (additions and
     comparisons) are ignored since they will just add a constant to the
     total sum of operation calculations, are incidental to the algorithm,
-    and won't affect the efficiency class. Worst-case operations are 
-    indicated in the comments shown in the algorithm. 
+    and won't affect the efficiency class. It is also assumed that $n-1$ is
+    a know precalculated value. Worst-case operations are indicated in the
+    comments shown in the algorithm. 
    
     \begin{align*} 
-        ops(n) &= 2 + \left( \sum_{i=0}^{n-1} 4 + \sum_{j=0}^{n-1} 1 \right) + 
+        ops(n) &= 3 + \sum_{i=0}^{n-1} \left(4 + \sum_{j=0}^{n-1} 1 \right) + 
         \sum_{i=0}^{n-1} 2 \\
-        &= 2 + \left(\sum_{i=0}^{n-1} 4 + n\right) + 2 \cdot n\\
-        &= 2 + 4 \cdot \left(\sum_{i=0}^{n-1} 1\right) + 
-           n \cdot \left(\sum_{i=0}^{n-1} 1 \right) + 2 \cdot n\\
-        &= 2 + 4n + n \cdot n + 2n\\
-        &= 2 + 6n + n^2 \\
+        &= 3 + \sum_{i=0}^{n-1} \left(4 + n\right) + 2 \cdot n\\
+        &= 3 + 2n + 4 \cdot \left(\sum_{i=0}^{n-1} 1\right) + 
+           n \cdot \sum_{i=0}^{n-1} 1 \\
+        &= 3 + 2n + 4n + n \cdot n\\
+        &= 3 + 6n + n^2 \\
         &\in O(n^2) 
     \end{align*} 
   
     \textbf{Solution: Fully-Connected Topology}
     \begin{algorithmic}
-        \Function{IsFullyConnected}{$A[0..n][0..n]$}
-            \For{$i:=0 \text{ to } n$}
+        \Function{IsFullyConnected}{$A[0..n-1][0..n-1]$}
+            \For{$i:=0 \text{ to } n-1$}
                 \State $count = 0$ \Comment{1 op}
-                \For{$j:=0 \text{ to } n$}
+                \For{$j:=0 \text{ to } n-1$}
                     \State $count = count + A[i,j]$ 
                     \Comment{Count how many nodes are connected (1 op)}
                 \EndFor
@@ -446,10 +454,10 @@ solving this puzzle and determine the number of moves it makes.
     \Function{SortDisks}{$A[0..2n-1]$}
         \For{$i:=0 \text{ to } n - 1$}
             \Comment{Array should be sorted after halfway through}
-            \For{$j:=i \text{ to } n - 1 - i$}
+            \For{$j:=0 \text{ to } n - 1 - i$}
                 \Comment{Only need to check every other index}
-                \If{$A[i + 2j] = D \text{ AND } A[i + 2j + 1] = L$}
-                    \State $flip(A[i + 2j], A[i + 2j + 1])$
+                \If{$A[2j + i] = D \text{ AND } A[2j + i + 1] = L$}
+                    \State $flip(A[2j + i], A[2j + i + 1])$
                 \EndIf 
             \EndFor
         \EndFor
@@ -457,7 +465,7 @@ solving this puzzle and determine the number of moves it makes.
 \end{algorithmic}
 Basic operation: flip
 \begin{align*}
-    ops(n) &= \sum_{i=0}^{n-1} \sum_{j=0}^{n - 1 - i} 1\\
+    ops(n) &= \sum_{i=0}^{n-1} \sum_{j=0}^{n - i - 1} 1\\
     &= \sum_{i=0}^{n-1} n - 1 - i + 1 = \sum_{i=0}^{n-1} n - i\\
     &= \sum_{j=1}^{n} j = \frac{n(n+1)}{2}\\
     &\in O(n^2)
