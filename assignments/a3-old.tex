@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,tabu,enumerate,tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usetikzlibrary{automata,positioning}
+\usepackage[margin=1in]{geometry}
+\renewcommand{\thealgorithm}{}
+\begin{document}
+
+{\raggedleft Kristina Frye \par}
+{\raggedleft CS 350 \par}
+{\raggedleft January 29, 2015 \par}
+{\raggedleft Assignment 3 \par} 
+\noindent\textbf{Problem 1} \\
+Compute the following sums:
+\begin{enumerate}[(a)]
+\item
+$\displaystyle\sum_{i=0}^{n+2}i(i + 1)$
+\begin{align*}
+\sum_{i=0}^{n+2}i(i + 1) &=\sum_{i=0}^{n+2}i^2 + i =
+\sum_{i=0}^{n+2}i^2 + \sum_{i=0}^{n+2}i \\
+&=\frac{n(n+1)(2n + 1)}{6} + (n+1)^2 + (n+2)^2 + 
+\frac{n(n+1)}{2} + (n+1) + (n+2)\\
+&=\frac{2n^3 + 3n^2 + n}{6} + (n^2 + 2n + 1) + (n^2 + 4n + 4) +
+\frac{n^2 + n}{2} + (n + 1) + (n + 2)\\
+&=\frac{2n^3 + 3n^2 + n}{6} + 
+\frac{6(2n^2 + 6n + 5)}{6} + \frac{n^2 + n}{2} +
+\frac{2(2n + 3)}{2}\\
+&=\frac{2n^3 + 15n^2 + 37n + 30}{6} + \frac{n^2 + 5n + 6}{2}\\
+&=\frac{2n^3 + 15n^2 + 37n + 30}{6} + \frac{3n^2 + 15n + 18}{6}\\
+&=\frac{2n^3 + 18n^2 + 52n + 48}{6}
+\end{align*}
+\item
+$\displaystyle\sum_{j=1}^{n}3^{j+2} = 
+\sum_{j=1}^{n}3^2 3^j = 3^2\sum_{j=1}^{n}3^j
+= 3^2 \cdot \frac{3^{n+1}-1}{2}
+= \frac{3^{n+3} - 3^2}{2}
+= \frac{3^{n+3} - 9}{2}$
+
+\item
+$\displaystyle\sum_{i=1}^{n}\sum_{j=1}^{n}ij = 
+\sum_{i=1}^{n}i\sum_{j=1}^{n}j =
+\sum_{i=1}^{n}i \frac{n(n+1)}{2} =
+\frac{n(n+1)}{2} \sum_{i=1}^{n}i =
+\frac{n(n+1)}{2} \frac{n(n+1)}{2} =
+\frac{1}{4} n^2(n+1)^2$ 
+\end{enumerate}
+\noindent\textbf{Problem 2}\\ 
+Consider the following algorithm:
+\begin{algorithm}
+\begin{algorithmic}
+\Procedure{Secret}{$A[0..n-1]$}\Comment{An array $A[0..n-1]$ of $n$ real numbers}
+\State $minval \gets A[0]; maxval \gets A[0]$
+\For{$i = 1 \text{ to } n-1$}
+\If{$A[i] < minval$}
+\State $minval \gets A[i]$
+\EndIf
+\If{$A[i] > maxval$}
+\State $maxval \gets A[i]$
+\EndIf
+\EndFor
+\State \textbf{return} $maxval - minval$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{enumerate}[(a)]
+\item What does this algorithm do? \textbf{A: } It computes the difference
+between the maximum and minimum value of the array of numbers.
+\item What is its basic operation \textbf{A: } The comparison operator ($<$ and $>$).
+\item How many times is the basic operation executed in the best and 
+worst cases? \textbf{A: } The best case is the same as the worse case. 
+For all cases, each element needs to be checked once; there is no way to 
+short circuit this algorithm, assuming there are no absolute min or max 
+values. Therefore $2n$ operations will always need to be performed in 
+order to determine the min and max values of the entire array. 
+\item What is the efficiency class of this algorithm? \textbf{A: } 
+$O(n)$ (linear)
+\end{enumerate}
+\noindent\textbf{Problem 3:}\\
+Solve the following recurrence relations, using backwards substitution, 
+or by calculating the first few terms and generalizing.
+\begin{enumerate}[(a)]
+\item $x(n) = 4 x(n-1) \text{ for } n > 1, x(1) = 2$
+\begin{align*}
+x(n) &= 4 \cdot x(n-1) \\
+\implies x(n-1) &= 4 \cdot x(n-2)\\
+\implies x(n) &= 4 \cdot 4 \cdot x(n-2)\\
+\implies x(n) &= 4^k \cdot x(n-k)\\
+\text{Let }k=n-1. \text{ Then: } 
+x(n) &= 4^{n-1} \cdot x(n-(n-1))\\
+&= 4^{n-1} \cdot x(1)\\
+&= 4^{n-1} \cdot 2\\
+\implies x(n) &= 2 \cdot 4^{n-1}
+\end{align*}
+
+\item $x(n) = x(n-1) + n \text{ for } n > 0, x(0) = 3$
+\begin{align*}
+x(n) &= x(n-1) + n\\
+\implies x(n-1) &= x(n-2) + n-1\\
+\implies x(n) &= x(n-2) + (n-1) + n\\
+\implies x(n) &= x(n-k) + \sum_{k=0}^{n-1}n-k\\
+\implies x(n) &= x(n-k) + \sum_{j=1}^{n}j\\
+\implies x(n) &= x(n-k) + \frac{n(n+1)}{2}\\
+\text{Let }k=n. \text{ Then: } 
+x(n) &= x(n-n) + \frac{n(n+1)}{2}\\
+\implies x(n) &= 3 + \frac{n(n+1)}{2}\\
+\end{align*}
+
+\item $x(n) = x(n/3) + 1 \text{ for } n > 1, x(1) = 1 \text{ (solve for } 
+n = 3k)$
+\begin{align*}
+x(n) &= x\left(\frac{n}{3}\right) + 1\\
+\implies x\left(\frac{n}{3}\right) &= x\left(\frac{n}{9}\right) + 1\\
+\implies x(n) &= x\left(\frac{n}{9}\right) + 1 + 1\\
+\implies x(n) &= x\left(\frac{n}{3^k}\right) + k\\
+\text{Let }n=3k. \text{ Then: }
+x\left(3^k\right) &= x\left(\frac{3^k}{3^k}\right) + \log_3 3^k\\
+&= 1 + \log_3 n\\
+\implies x(n) &= 1 + \log_3 n \text{ where } n = 3^k 
+\end{align*}
+\end{enumerate}
+\noindent\textbf{Problem 4} \\
+Consider this algorithm for $min$; it recursively divides the input array 
+$A$ into two halves:
+\begin{algorithm}
+\begin{algorithmic}
+\Procedure{Min2}{$A[l..r]$}
+\If{$l=r$}
+\State return $A[l]$
+\EndIf
+\State $mid \gets \left \lfloor\frac{l + r}{2}\right \rfloor$
+\State $temp1 \gets Min2(A[l..mid])$
+\State $temp2 \gets Min2(A[mid+1..r])$
+\If{$temp1 \le temp2$}
+\State return $temp1$
+\Else
+\State return $temp2$
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{enumerate}[(a)]
+\item What is this Algorithm’s basic operation? 
+\textbf{ A: } 
+The division operation $\frac{l + r}{2}$.
+\item Set up a recurrence relation for $B(n)$, the number of times that 
+the basic operation is executed on an input array of size $n$, and
+
+\textbf{ A: }
+$B(n) = 2 \cdot B\left(\frac{n}{2})\right) + 1, B(1) = 0, n > 0$
+\item solve it
+\begin{align*}
+B(n) &= 2 \cdot B\left(\frac{n}{2}\right) + 1\\
+\implies B\left(\frac{n}{2}\right) &= 2 \cdot B\left(\frac{n}{4}\right) + 1\\
+\implies B(n) &= 2 \cdot 2 \cdot B\left(\frac{n}{4}\right) + 1 + 1\\
+\implies B(n) &= 2^k B\left(\frac{n}{2^k}\right) + k\\
+\text{Let } n = 2^k. \text{ Then: } 
+B(n) &= n \cdot B\left(\frac{n}{n}\right) + \log_2n\\
+B(n) &= 1 + \log_2n
+\end{align*}
+\end{enumerate}
+\noindent\textbf{Proof:}\\
+Let: 
+\begin{align*}
+t_1 &= a_kn^k, \\
+t_2 &= a_{k-1}n^{k-1}, \\
+t_3 &= a_{k-2}n^{k-2}, \\ 
+...\\
+t_k &= a_0n^0
+\end{align*}
+Then:
+\begin{align*}
+t_1 &\in \Theta(n^k),\\
+t_2 &\in \Theta(n^{k-1}),\\
+t_3 &\in \Theta(n^{k-2}),\\
+...\\
+t_k &\in \Theta(n^0)
+\end{align*}
+by the definition of $\Theta$.
+But $(t_1 + t_2 + t_3 + ... + t_k) \in \Theta(\max\{ n^k, n^{k-1}, n^{k-2},
+..., n^0\})$ by the theorem on page $56$ in the book and 
+$\max\{n^k, n^{k-1}, n^{k-2}, ..., n^0\}) = n^k.$ Therefore
+$p(n) = a_kn^k + a_{k-1}n^{k-1} + a_{k-2}n^{k-2} + a_{k-3}n^{k-3} + ... +
+a_0 \in \Theta(n^k)$ which means that every polynomial $\in \Theta(n^k) \qed$ 
+\\
+\\
+\noindent\textbf{Problem 4} \\
+Levitin mentions, in section 2, that one can check whether all elements of 
+an array are distinct by a two-part algorithm that first sorts the array, and
+then scans through the array looking at adjacent elements. If the sorting is
+done by an algorithm with the time efficiency in $\Theta(n \log n)$, what will
+be the time efficiency class of the entire algorithm? Explain why.\\ 
+\\
+\noindent\textbf{Answer}\\
+The time efficiency class of the entire algorithm will also be $\Theta(n \log
+n)$. In a two part algorithm, the efficiency of the entire algorithm is the 
+addition of the second part of the algorithm to the first part of the 
+algorithm. Let the first part of the algorithm be $t_1(n) \in \Theta(n \log
+n)$. Let the second part of the algorithm (scanning through the array looking
+at adjacent elements) be $t_2(n)$. $t_2(n) \in \Theta(n)$
+because each member of the array will need to be visited once (after they
+have been sorted) to confirm that each element is unique. This is linear
+time $(\Theta(n))$. The time efficiency class of the entire algorithm is
+$\Theta(\max \{n \log n, n\}) = \Theta(n \log n)$ by the theorem on page $56$
+in the book. \\
+\\ 
+\noindent\textbf{Problem 5}\\
+The range of a finite nonempty set of $n$ real numbers $S$ is defined as the
+difference between the largest and smallest elements of $S$. For each
+representation of $S$ given below, describe in English an algorithm to compute
+the range. Indicate the time efficiency classes of these algorithms using the
+most appropriate notation $(O, \Theta, \text{or } \Omega)$. 
+\begin{enumerate}[(a)]
+\item An unsorted array: Set local variables max and min equal to the first
+element of the array. Step through each element of the array. If the value
+is greater than max, set max equal to the value. If the value is less than
+min, set min equal to the value. After each element has been visited,
+subtract min from max and return the resulting value. This is $\Theta(n)$
+since each element of the array is visited exactly once. 
+\item A sorted array: Subtract the first element of the array (the smallest
+number) from the last element of the array (the largest number). This is
+constant time: $\Theta(1)$.
+\item A sorted singly-linked list: Set the first element of the list equal
+to a local variable min. Traverse through the list until you get to the last
+element. Set the value of the last element equal to local variable max.
+Subtract min from max and return the result. This is linear time: $\Theta(n)$
+since each element must be visited once.
+\item A binary search tree: Go to the first element of the binary search
+tree by choosing the left branch when it is exists. If no left branch
+exists, choose the right. Continue until a leaf is reached. This leaf will
+contain the minumum value. Store into a local variable.
+Starting from the root node, traverse the tree, choosing the right branch
+when it is available. If no right branch is available, choose the left 
+branch. Continue until a leaf is reached. This leaf will contain 
+the maximum value. Subtract the minimum from this value and return the
+result. The efficiency class is dependent upon the structure of the
+binary search tree. When finding the min and max values, the worst case is 
+$O(n)$ when the tree is set up similar to a linked list with the desired
+value at the end of a long chain. The efficiency class could be
+$\Theta(\log n)$ if the tree is balanced. Therefore, the proper categorization 
+is the linear efficiency class: $O(n) + O(n) = O(n)$. 
+\end{enumerate}
+\end{document}

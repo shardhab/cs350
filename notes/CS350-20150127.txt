@@ -1,0 +1,15 @@
+Brute Force Algorithm for Convex Hull
+
+Set edges = 0
+for all p 
+  for all q, p != q
+    for all r
+      if r.whichSideOfLine(p,q) = -ve
+        break
+    edges.add(pq)
+
+__Reading Quiz:__
+Checking if a graph is connected:
+check if n-1 is connected
+Does this work? No because removing a node may disconnect the set
+of nodes.

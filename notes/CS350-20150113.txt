@@ -1,0 +1,37 @@
+log(n) = o(n). For o, we say "for all" constants, c, 
+0 <= f(n) < c g(n). f(n) is essentially zero compared to g(n)
+
+For O(n), we say there exists a constant. 
+
+So log(n) is always smaller than n, regardless of the n.
+
+Take the limit of one function to another function:
+lim n -> inf: t(n) / g(n)
+
+To determine the floor of the square root:
+
+For i: 1 to n /2:
+  temp = i * i
+  if temp == n
+    return i
+  if temp >= n
+    return i - 1;
+    
+The efficiency is O(sqrt(n))
+
+If recursively divide by 2 to check the numbers, the efficiency would
+be O(log(n))
+
+The door in the wall problem:
+
+sum_i = 1 ^ (ln n): 2 * 2^1
+where:
+2^i > n
+i > lg n
+
+sum = 2 sum_{i = 1}^{floor(log_n) + 1} 2^i
+    = 2^{floor(ln n)} + 1
+    = n + 1
+    = O(n)
+
+

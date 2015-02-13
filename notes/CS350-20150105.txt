@@ -1,0 +1,11 @@
+An intractable dataset means that while you can compute it in practice,
+in reality, it would take too long.
+
+The recipe could be argued is not an algorithm because the steps are
+not sufficiently precise and there is no set ending.
+
+Algorithm definition:
+-Each step must be unambiguous
+-The algorithm must terminate
+
+
