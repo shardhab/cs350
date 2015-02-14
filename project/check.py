@@ -1,4 +1,11 @@
+#!/usr/bin/python
 
+# This program takes an input of a file and outputs whether or not
+# the list of numbers contained in the file is sorted
+#
+# It is assumed the numbers in the file are in the format: [1, 2, 3]
+#
+# Usage: ./check.py <filename>
 import sys
 
 name = sys.argv[1]
@@ -20,3 +27,4 @@ with open(name) as fileobj:
             else:
                 num = curr
         print "List is sorted"
+        exit(0)
