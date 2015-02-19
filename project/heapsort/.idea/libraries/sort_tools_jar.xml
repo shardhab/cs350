@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="sort_tools_jar">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../sort_tools/out/artifacts/sort_tools_jar" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../sort_tools/out/artifacts/sort_tools_jar" recursive="false" />
+  </library>
+</component>
