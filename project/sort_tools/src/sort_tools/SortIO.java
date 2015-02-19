@@ -1,7 +1,10 @@
 package sort_tools;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,5 +29,17 @@ public class SortIO {
         inFile.close();
 
         return temps.toArray(new Integer[0]);
+    }
+
+    public static void writeData(Integer[] list, String output) throws Exception {
+        BufferedWriter outputWriter = new BufferedWriter(new FileWriter(output));
+        outputWriter.write(Arrays.toString(list));
+        outputWriter.close();
+    }
+
+    public static void writeMeas(long start, long stop, String file) throws Exception {
+        BufferedWriter outputWriter = new BufferedWriter(new FileWriter(file));
+        outputWriter.write(Long.toString(stop - start));
+        outputWriter.close();
     }
 }

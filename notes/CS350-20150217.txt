@@ -1,0 +1,17 @@
+AVL = left and right subtree differ by at most 1 (Mostly balanced)
+Hashing works as well or better as AVL.
+
+B-trees make database structure fast
+
+Sometimes using less space makes the algorithm take less time too 
+because there is less data to process.
+
+To choose a data structure, look at other algorithms and what they 
+use, look at tradeoffs. Make an educated guess.
+
+Distribution Counting Sort:
+Count the occurrences of each key.
+Calculate the cumulative totals
+
+
+
