@@ -1,0 +1,307 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,tabu,enumerate,tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage[margin=1in]{geometry}
+\begin{document}
+
+{\raggedleft Kristina Frye \par}
+{\raggedleft CS 551 \par}
+{\raggedleft May 28, 2014 \par}
+{\raggedleft Assignment 4 \par} 
+\noindent\textbf{Section 4.1, Problem 6} \\
+A monomial matrix is a square matrix in which each row and column contains
+exactly one nonzero entry. Prove that a monomial matrix is nonsingular.
+\\
+\\
+\noindent\textbf{Proof:}\\
+The determinant of an $n \times n$ matrix is:
+\[
+ det(A) = \sum_{\sigma \in S_n} sgn(\sigma) \prod_{i=1}^{n}A_{i, \sigma_i}
+\]
+where $sgn(\sigma) = \pm 1$ and $\sigma_i$ is some reordering of the rows
+of the matrix. Because there is exactly one nonzero entry for each row,
+there will be one nonzero term in the determinant equal to 
+$\pm \prod_{i=1}^n A_{i, \sigma_i}$. That is, the terms of the sum will
+be equal to the nonzero value in each row of the matrix. Therefore
+the determinant of $A$ is nonzero. Therefore the matrix is nonsingular.  
+$\qed$\\
+\\
+\noindent\textbf{Section 4.1, Problem 13} \\
+Let $D$ be a matrix in partitioned form:
+\[
+ D = \begin{bmatrix}
+  A & B\\
+  C & I
+ \end{bmatrix}
+\]
+Prove that if $A-BC$ is nonsingular, then so is $D$.\\
+\\
+\noindent\textbf{Proof:}\\
+\\
+Let $I = DE$ for some matrix $E = \begin{bmatrix} F & G\\ H & J \end{bmatrix}$.
+Then 
+\[
+I = \begin{bmatrix} AF + BH & AG + BJ \\ CF + H & CG + J \end{bmatrix}.
+\]
+
+\noindent This implies that $AF + BH = I$, $AG + BJ = 0$, $CF + H = 0$, 
+and $CG + J = I$. We use these equations to determine $F, G, H, and J$ in 
+terms of $A, B, and C$.  
+\begin{enumerate}
+\item
+$H = -CF \implies I = AF + B(-CF) \implies 
+I = (A-BC)F \implies F = (A-BC)^{-1}$.
+\item
+$H = -CF \implies H = -C(A-BC)^{-1}$
+\item
+$AG + BJ = 0 \implies AG + B(I - CG) = 0 \implies AG + B - BCG = 0
+\implies (A-BC)G + B = 0 \implies G = -B(A-BC)^{-1}$
+\item
+$J = I - CG \implies J = I + BC(A-BC)^{-1}$
+\end{enumerate} 
+Since $E$ is the inverse of $D$, and each term of $E$ is in terms of
+$(A-BC)^{-1}$, then $E$ is only valid if $(A-BC)^{-1}$ is valid. Therefore
+$D$ only has an inverse, and thus is nonsingular, if $A-BC$ has an 
+inverse and is nonsingular.$\qed$\\
+\\ 
+\noindent\textbf{Section 4.1, Problem 21} \\
+Can a matrix have a right inverse and a left inverse that are not equal?
+\\
+\\
+\noindent\textbf{Answer}\\
+No. Given a matrix $A$, if $BA = I$ (that is, $B$ is the left inverse), and
+$AC = I$ (that is, $C$ is the right inverse), then $B = BI = B(AC) = (BA)C
+= IC = C$. This proves that $B = C$.
+\\
+\\
+\noindent\textbf{Section 4.3, Problem 1B} \\
+Solve the following linear system twice. First, use Gaussian elimination and
+give the factorization $A = LU$. Second, use Gaussian elimination with
+scaled row pivoting and determine the factorization of the form
+$PA = LU$.\\
+\\
+\[
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 2 & 1 & 0 \\
+ 0 & 2 & 1
+\end{bmatrix}
+\begin{bmatrix}
+ x_1 \\
+ x_2 \\
+ x_3 
+\end{bmatrix} = 
+\begin{bmatrix}
+ 3 \\
+ 1 \\
+ 1
+\end{bmatrix}
+\] 
+
+\noindent\textbf{Simple Gaussian elimination}\\
+\[
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 2 & 1 & 0 \\
+ 0 & 2 & 1
+\end{bmatrix}
+\begin{bmatrix}
+ x_1 \\
+ x_2 \\
+ x_3
+\end{bmatrix} =
+\begin{bmatrix}
+ 3 \\
+ 1 \\
+ 1
+\end{bmatrix}
+\implies
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 0 & -11 & 0 \\
+ 0 & 2 & 1
+\end{bmatrix}
+\begin{bmatrix}
+ x_1 \\
+ x_2 \\
+ x_3
+\end{bmatrix} =
+\begin{bmatrix}
+ 3 \\
+ -5 \\
+ 1
+\end{bmatrix}
+\implies
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 0 & -11 & 0 \\
+ 0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+ x_1 \\
+ x_2 \\
+ x_3
+\end{bmatrix} =
+\begin{bmatrix}
+ 3 \\
+ -5 \\
+ 1 \over 11 
+\end{bmatrix}
+\]
+This implies that $x_2 = {5 \over 11}, x_3 =  {1 \over 11} \implies
+x_1 + 6 \cdot {5 \over 11} = 3 \implies x_1 = {3 \over 11}$
+
+\[
+A = 
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 2 & 1 & 0 \\
+ 0 & 2 & 1
+\end{bmatrix}
+L =
+\begin{bmatrix}
+ 1 & 0 & 0\\
+ 2 & 1 & 0\\
+ 0 & -{2\over 11} &  1
+\end{bmatrix}
+U = 
+\begin{bmatrix}
+  1 & 6 & 0 \\
+ 0 & -11 & 0 \\
+ 0 & 0 & 1
+\end{bmatrix}
+\]
+\noindent\textbf{Gaussian elimination with scaled row pivoting}
+\[
+\begin{bmatrix}
+ 1 & 6 & 0 \\
+ 2 & 1 & 0 \\
+ 0 & 2 & 1
+\end{bmatrix}
+\begin{bmatrix}
+ x_1 \\
+ x_2 \\
+ x_3
+\end{bmatrix} =
+\begin{bmatrix}
+ 3 \\
+ 1 \\
+ 1
+\end{bmatrix}
+\implies S = [ 6, 2, 2 ], Q = \left[{1 \over 6}, {2 \over 2}, {0 \over 2}\right]
+\implies p = [2, 1, 3]
+\]
+\[
+A \rightarrow
+\begin{bmatrix}
+ {1 \over 2} & {11 \over 2} & 0 \\
+ 2   & 1    & 0 \\
+ 0   & 2    & 1
+\end{bmatrix}
+\implies Q = \left[{11 \over 12}, {2 \over 2}\right] \implies p = [2, 3, 1]
+\]
+\[
+A \rightarrow
+\begin{bmatrix}
+ {1 \over 2} & {11 \over 4} & -{11 \over 4} \\
+ 2   & 1    & 0 \\
+ 0   & 2    & 1
+\end{bmatrix}
+\]
+Since $p_1 = 2$, Row 1 of $L$ and $U$ is constructed from Row 2 of $A$.\\
+Since $p_2 = 3$, Row 2 of $L$ and $U$ is constructed from Row 3 of $A$.\\
+Since $p_3 = 1$, Row 3 of $L$ and $U$ is constructed from Row 1 of $A$.\\
+\\
+Therefore:
+\[
+L = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+{1 \over 2} & {11 \over 4} & 1
+\end{bmatrix}
+U = \begin{bmatrix}
+2 & 1 & 0 \\
+0 & 2 & 1 \\
+0 & 0 & -{11 \over 4}
+\end{bmatrix}
+\]
+Since $p = [2, 3, 1]$,  then
+\[
+P = \begin{bmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+1 & 0 & 0
+\end{bmatrix}
+\]
+Forward substitution: $Ly = Pb$:\\
+$p_1 = 2$, so $y_1 = b_2 = 1 \implies y_1 = 1$.\\
+$p_2 = 3$, so $y_2 = b_3 = 1 \implies y_2 = 1$.\\
+$p_3 = 1$, so ${1 \over 2}y_1 + {11 \over 4}y_2 + y_3 = b_1 = 3
+\implies y_3 = -{1 \over 4}$\\
+\\
+Backwards substitution: $Ux = y$:\\
+$p_3 = 1$, so $-{11 \over 4}x_3 = -{1 \over 4} \implies x_3 = {1 \over 11}$\\
+$p_2 = 3$, so $2x_2 + x_3 = 1 \implies 2x_2 + {1 \over 11} = 1
+\implies x_2 = {5 \over 11}$\\
+$p_1 = 2$, so $2x_1 + x_2 = y_1 \implies 2x_1 + {5 \over 11} = 1
+\implies x_1 = {3 \over 11}$\\
+\\
+This solution for $x$ agrees with the solution found with the simple
+Gaussian elimination method.\\
+\\
+\noindent\textbf{Section 4.3, Problem 50}\\
+a. Prove that computing the determinant of a matrix by expansion by minors
+involves $(n-1)n!$ ops.\\
+To calculate the determinant of an $n \times n$ matrix, 
+multiply the first entry of each column by the determinant of an
+$(n-1) \times (n-1)$ matrix. Each term will have $n-1$ variables and there
+will be $n!$ terms when calculating the determinant using expansion
+by minors. Therefore there will be $n-1(n!)$ multiplies.\\
+\\
+b. Prove that Cramer's rule requires $(n^2 - 1)(n!)$ ops.\\
+When performing Cramer's Rule, each column is used to calculate $n$
+determinants $n$ times. Each determinant involves $n!$ calculations
+since the formula is recursive. Therefore, the number of multiplications 
+is $(n^2 -1)n!$.\\
+\\
+c. Prove that the Gauss-Jordan method involves ${1 \over 2}n(n+1)^2 \approx
+{1 \over 2}n^3$ and therefore is 50\% more expensive than Gaussian elimination.\\
+To perform the Gauss-Jordan method, each row is used to eliminate other
+entries in the column. Multiply a constant to the pivot row ($n$ multiplies)
+and adding it to the pivot row. Repeat for each row, decreasing by 1.
+So, $n + (n-1) + (n-2) + ... + 1 = {n(n+1) \over 2}$. This is done for
+each of $(n+1)$ columns for a total of ${n(n+1)^2 \over 2}$ multiplies.\\
+\\ 
+\noindent\textbf{Section 4.4, Problem 14}\\
+Prove that the condition number of an invertible matrix must be at least
+1.\\
+\\
+$\|I\| = 1$. Therefore $1 = \|I\| = \|AA^{-1}\| \le \|A\| \|A^{-1}\| = 
+\kappa(A)$. So, if $A$ is invertible and $AA^{-1} = I$, then the
+condition number of $A$, $\kappa(A)$, must be at least 1.\\
+\\
+\noindent\textbf{Section 4.4, Problem 16}\\
+Using the infinity matrix norm, computing the condition number of the matrix
+\[
+\begin{bmatrix}
+ 7 & 8 \\
+ 9 & 10 
+\end {bmatrix} 
+\]
+We can calculate that $A^{-1} = 
+\begin{bmatrix}
+ -5 & 4 \\
+ 4.5 & -3.4
+\end{bmatrix},  
+\|A\|_{\infty} = 19$, and $\|A^{-1}\|_{\infty} = 9$. Therefore $\kappa(A) = 
+19 \cdot 9 = 171$.\\
+\\
+\noindent\textbf{Section 4.4, Problem 26}\\ 
+Give an example of a well conditioned matrix whose determinant is very
+small.\\
+\\
+The identity matrix has a determinant of 1 and a condition number of 1.
+Therefore, the determinant is small and it is well-conditioned. For
+smaller determinants, just multiply the identity matrix by a small
+constant. The matrix will still be well-conditioned. 
+\end{document}

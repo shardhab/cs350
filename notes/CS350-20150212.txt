@@ -1,0 +1,9 @@
+Counting the leaves:
+
+LeafCounter(T) {
+  if(T == null) return 0
+  n = LeafCounter(T_left) + LeafCounter(T_right) 
+  if(n == 0) 
+    return 1
+  else
+    return n
