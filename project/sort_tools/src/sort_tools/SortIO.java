@@ -33,13 +33,13 @@ public class SortIO {
 
     public static void writeData(Integer[] list, String output) throws Exception {
         BufferedWriter outputWriter = new BufferedWriter(new FileWriter(output));
-        outputWriter.write(Arrays.toString(list));
+        outputWriter.append(Arrays.toString(list));
         outputWriter.close();
     }
 
     public static void writeMeas(long start, long stop, String file) throws Exception {
         BufferedWriter outputWriter = new BufferedWriter(new FileWriter(file));
-        outputWriter.write(Long.toString(stop - start));
+        outputWriter.append(Long.toString(stop - start));
         outputWriter.close();
     }
 }
