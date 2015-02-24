@@ -3,6 +3,7 @@ package sort_tools;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,14 +33,14 @@ public class SortIO {
     }
 
     public static void writeData(Integer[] list, String output) throws Exception {
-        BufferedWriter outputWriter = new BufferedWriter(new FileWriter(output));
-        outputWriter.append(Arrays.toString(list));
+        PrintWriter outputWriter = new PrintWriter(new BufferedWriter(new FileWriter(output, true)));
+        outputWriter.println(Arrays.toString(list));
         outputWriter.close();
     }
 
     public static void writeMeas(long start, long stop, String file) throws Exception {
-        BufferedWriter outputWriter = new BufferedWriter(new FileWriter(file));
-        outputWriter.append(Long.toString(stop - start));
+        PrintWriter outputWriter = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+        outputWriter.println(Long.toString(stop - start));
         outputWriter.close();
     }
 }
