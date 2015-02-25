@@ -23,8 +23,8 @@ public class heapsort {
             long start = thMxB.getCurrentThreadCpuTime();
             sorted = heapsort(nums);
             long stop = thMxB.getCurrentThreadCpuTime();
-            //tools.writeMeas(start, stop, output);
-            tools.writeData(sorted, output);
+            tools.writeMeas(start, stop, output);
+            //tools.writeData(sorted, output);
         }
         catch(Exception ex) {
             System.out.print(ex.toString());
@@ -35,7 +35,7 @@ public class heapsort {
     public static Integer[] heapsort(Integer[] nums) {
         int length = nums.length;
         for(int i = (length/2) - 1; i >= 0; i--) {
-            siftDown(nums, i, length);
+            siftDown(nums, i, length - 1);
         }
         for(int i = length - 1; i >= 1; i--) {
             swap(nums, 0, i);
