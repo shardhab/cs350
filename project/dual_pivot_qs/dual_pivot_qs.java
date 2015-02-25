@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
-public class dp_quicksort{
+public class dual_pivot_qs {
 		private Integer[] nums;
 	public static void main(String[] args) throws IOException {		
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
@@ -21,6 +21,7 @@ public class dp_quicksort{
       sorter.sort(getAll);
       long stop = thMxB.getCurrentThreadCpuTime();
       tools.writeMeas(start, stop, output);
+//      tools.writeData(getAll, output);
 		}
 		catch(Exception ex) {
       System.out.println(ex.toString());

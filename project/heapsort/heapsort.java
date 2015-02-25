@@ -1,10 +1,9 @@
-package sort;
 import sort_tools.SortIO;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
-public class HeapSort {
+public class heapsort {
 
     public static void main(String[] args) {
         Integer[] nums;
