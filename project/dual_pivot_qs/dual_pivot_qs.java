@@ -7,7 +7,7 @@ public class dual_pivot_qs {
 		private Integer[] nums;
 	public static void main(String[] args) throws IOException {		
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
-		dp_quicksort sorter = new dp_quicksort();
+		dual_pivot_qs sorter = new dual_pivot_qs(); 
 		if(args.length != 2){
 			System.out.println("Usage: quicksort <input file> <output file>");
 			System.exit(1);
