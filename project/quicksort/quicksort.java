@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
-public class QuickSort{
+public class quicksort{
 		private Integer[] nums;
 	public static void main(String[] args) throws IOException {		
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
