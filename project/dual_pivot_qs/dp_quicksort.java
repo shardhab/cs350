@@ -23,7 +23,7 @@ public class dp_quicksort{
       long start = thMxB.getCurrentThreadCpuTime();
       sorter.sort(getAll);
       long stop = thMxB.getCurrentThreadCpuTime();
-      tools.writeData(start, stop, output);
+      tools.writeMeas(start, stop, output);
 		}
 		catch(Exception ex) {
       System.out.println(ex.toString());
@@ -33,9 +33,9 @@ public class dp_quicksort{
 	public void sort(Integer[] input){
 		this.nums = input;
 		quicksort(0, nums.length - 1);
-		for (int i : nums)
-				System.out.print(i + " ");
-		System.out.println();
+//		for (int i : nums)
+//				System.out.print(i + " ");
+//		System.out.println();
 	}
 
 	public void quicksort(int left, int right){

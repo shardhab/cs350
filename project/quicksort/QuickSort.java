@@ -33,8 +33,8 @@ public class QuickSort{
 	public void sort(Integer[] input){
 		this.nums = input;
 		quicksort(0, nums.length - 1);
-		for (int i : nums)
-				System.out.println(i + " ");
+//		for (int i : nums)
+//				System.out.println(i + " ");
 	}
 
 	public void quicksort(int left, int right){
