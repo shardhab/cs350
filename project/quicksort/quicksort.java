@@ -7,7 +7,7 @@ public class quicksort{
 		private Integer[] nums;
 	public static void main(String[] args) throws IOException {		
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
-		QuickSort sorter = new QuickSort();
+		quicksort sorter = new quicksort();
 		if(args.length != 2){
 			System.out.println("Usage: quicksort <input file> <output file>");
 			System.exit(1);
