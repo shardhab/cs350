@@ -16,10 +16,7 @@ public class dp_quicksort{
 			String input = args[0];
       String output = args[1];
       SortIO tools = new SortIO();
-      Integer[] getAll = tools.getData(input); //{52,1,5,4,11,3,0,0,2,7,10,3,7,7,7};
-			for(int i : getAll)
-				System.out.print(i + " ");
-			 System.out.println();
+      Integer[] getAll = tools.getData(input); //{52,1,5,4,11,3,0,0,2,7,10,3,7,7,7}
       long start = thMxB.getCurrentThreadCpuTime();
       sorter.sort(getAll);
       long stop = thMxB.getCurrentThreadCpuTime();
