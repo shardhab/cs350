@@ -15,11 +15,14 @@ public class introsort {
 
   public static void main(String[] args) throws IOException {
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
+    boolean meas = false;
     heap = new heapsort();
-    if (args.length != 2) {
+    if (args.length < 2) {
       System.out.println("Usage: quicksort <input file> <output file>");
       System.exit(1);
     }
+    if (args.length == 3 && args[2] == "-m")
+      meas = true;
     try {
       String input = args[0];
       String output = args[1];
@@ -29,14 +32,17 @@ public class introsort {
       long start = thMxB.getCurrentThreadCpuTime();
       introsort(getAll, maxdepth, 0, getAll.length - 1);
       long stop = thMxB.getCurrentThreadCpuTime();
-      tools.writeMeas(start, stop, output);
+      if(meas)
+        tools.writeData(getAll, output);
+      else
+        tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
       System.out.println(ex.toString());
     }
   }
 
   public static void introsort(Integer[] input, int maxdepth, int lo, int high) {
-    if(input.length <= 1)
+    if(high - lo <= 1)
       return;
     else if(maxdepth == 0) {
       heap.heapsort(input);
