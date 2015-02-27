@@ -18,9 +18,8 @@ public class heapsort {
       String output = args[1];
       SortIO tools = new SortIO();
       nums = tools.getData(input);
-
       long start = thMxB.getCurrentThreadCpuTime();
-      heapsort(nums);
+      heapsort(nums, 0, nums.length);
       long stop = thMxB.getCurrentThreadCpuTime();
       tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
@@ -28,40 +27,32 @@ public class heapsort {
     }
   }
 
-  public static Integer[] heapsort(Integer[] nums) {
-    int length = nums.length;
-    for (int i = (length / 2) - 1; i >= 0; i--) {
-      siftDown(nums, i, length - 1);
+  public static Integer[] heapsort(Integer[] nums, int lo, int high) {
+    int length = high - lo;
+    for (int i = (length / 2); i >= 1; i--) {
+      siftDown(nums, i, length, lo);
     }
-    for (int i = length - 1; i >= 1; i--) {
-      swap(nums, 0, i);
-      siftDown(nums, 0, i - 1);
+    for (int i = length; i > 1; i--) {
+      swap(nums, lo, lo + i - 1);
+      siftDown(nums, 1, i - 1, lo);
     }
     return nums;
   }
 
-  private static void siftDown(Integer[] nums, int root, int bottom) {
+  private static void siftDown(Integer[] nums, int root, int bottom, int lo) {
     boolean done = false;
-    int max, temp;
+    int max;
+    int child;
+    int d = nums[lo + root - 1];
 
-    while ((root * 2 <= bottom) && !done) {
-
-      // Find the max child
-      if (root * 2 == bottom) {
-        max = root * 2;
-      } else if (nums[root * 2] > nums[root * 2 + 1]) {
-        max = root * 2;
-      } else {
-        max = root * 2 + 1;
+    while (root * 2 <= bottom) {
+      child = 2 * root;
+      if (child < bottom && nums[lo + child - 1] < nums[lo + child]) {
+        child++;
       }
-
-      // If max child is bigger than root, swap them
-      if (nums[root] < nums[max]) {
-        swap(nums, root, max);
-        root = max;
-      } else {
-        done = true;
-      }
+      if(d >= nums[lo + child - 1]) break;
+      swap(nums, lo + root - 1, lo + child - 1);
+      root = child;
     }
   }
 
