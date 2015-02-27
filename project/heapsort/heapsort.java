@@ -8,34 +8,24 @@ public class heapsort {
   public static void main(String[] args) {
     Integer[] nums;
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
-    boolean meas = false;
 
-    if (args.length < 2) {
+    if (args.length != 2) {
       System.out.print("Usage: heapsort <input file> <output file>");
       System.exit(1);
     }
-    if (args.length == 3 && args[2].equals("-m"))
-      meas = true;
     try {
       String input = args[0];
       String output = args[1];
       SortIO tools = new SortIO();
-      if(meas == true)
-        nums = tools.getMeasData(input);
-      else 
-        nums = tools.getData(input);
+      nums = tools.getData(input);
 
       long start = thMxB.getCurrentThreadCpuTime();
       heapsort(nums);
       long stop = thMxB.getCurrentThreadCpuTime();
-      if (meas == true)
-        tools.writeData(nums, output);
-      else
-        tools.writeMeas(start, stop, output);
+      tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
       System.out.print(ex.toString());
     }
-
   }
 
   public static Integer[] heapsort(Integer[] nums) {
