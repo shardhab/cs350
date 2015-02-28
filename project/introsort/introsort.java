@@ -17,7 +17,7 @@ public class introsort {
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
     heap = new heapsort();
     if (args.length != 2) {
-      System.out.println("Usage: quicksort <input file> <output file>");
+      System.out.println("Usage: introsort <input file> <output file>");
       System.exit(1);
     }
 
@@ -30,8 +30,8 @@ public class introsort {
       long start = thMxB.getCurrentThreadCpuTime();
       introsort(getAll, maxdepth, 0, getAll.length - 1);
       long stop = thMxB.getCurrentThreadCpuTime();
-      tools.writeData(getAll, output);
-      //tools.writeMeas(start, stop, output);
+      //tools.writeData(getAll, output);
+      tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
       System.out.println(ex.toString());
     }
