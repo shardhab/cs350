@@ -15,14 +15,12 @@ public class introsort {
 
   public static void main(String[] args) throws IOException {
     ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
-    boolean meas = false;
     heap = new heapsort();
-    if (args.length < 2) {
+    if (args.length != 2) {
       System.out.println("Usage: quicksort <input file> <output file>");
       System.exit(1);
     }
-    if (args.length == 3 && args[2] == "-m")
-      meas = true;
+
     try {
       String input = args[0];
       String output = args[1];
@@ -32,48 +30,62 @@ public class introsort {
       long start = thMxB.getCurrentThreadCpuTime();
       introsort(getAll, maxdepth, 0, getAll.length - 1);
       long stop = thMxB.getCurrentThreadCpuTime();
-      if(meas)
-        tools.writeData(getAll, output);
-      else
-        tools.writeMeas(start, stop, output);
+      tools.writeData(getAll, output);
+      //tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
       System.out.println(ex.toString());
     }
   }
 
-  public static void introsort(Integer[] input, int maxdepth, int lo, int high) {
-    if(high - lo <= 1)
-      return;
-    else if(maxdepth == 0) {
-      heap.heapsort(input);
+  public static void introsort(Integer[] input, int maxdepth, int left, int right) {
+    if(maxdepth == 0) {
+      heap.heapsort(input, left, right);
     }
-    else {
-      int p = partition(input, lo, high);
-      introsort(input, maxdepth - 1, lo, p - 1);
-      introsort(input, maxdepth - 1, p+1, high);
+    int pivot = input[(left + right) / 2];
+    int l = left;
+    int r = right;
+    while(l <= r){
+      // look for left element to swap
+      while(input[l] < pivot)
+        ++l;
+      // look for right element to swap
+      while(input[r] > pivot)
+        --r;
+      //both found, now swap
+      if(l <= r){
+        int temp = input[l];
+        input[l] = input[r];
+        input[r] = temp;
+        ++l;
+        --r;
+      }
     }
+    if (left < r)
+      introsort(input, maxdepth - 1, left, r);
+    if (l < right)
+      introsort(input, maxdepth - 1, l, right);
   }
 
   public static Integer partition(Integer[] list, int lo, int high) {
-    int pivot = list[(lo + high) / 2];
     left = lo;
-    right = high;
-    while (left <= right) {
-      // look for left element to swap
+    right = high + 1;
+    int pivot = list[(lo + high) / 2];
+    while (true) {
       while (list[left] < pivot)
-        ++left;
-      // look for right element to swap
+        left++;
+      right--;
       while (list[right] > pivot)
-        --right;
-      //both found, now swap
-      if (left <= right) {
-        int temp = list[left];
-        list[left] = list[right];
-        list[right] = temp;
-        ++left;
-        --right;
-      }
+        right--;
+      if (!(left < right))
+        return left - 1;
+      swap(list, left, right);
+      left++;
     }
-    return right;
+  }
+
+  private static void swap(Integer[] list, int i, int j) {
+    Integer t = list[i];
+    list[i] = list[j];
+    list[j] = t;
   }
 }

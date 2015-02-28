@@ -21,6 +21,7 @@ public class heapsort {
       long start = thMxB.getCurrentThreadCpuTime();
       heapsort(nums, 0, nums.length);
       long stop = thMxB.getCurrentThreadCpuTime();
+  //    tools.writeData(nums, output);
       tools.writeMeas(start, stop, output);
     } catch (Exception ex) {
       System.out.print(ex.toString());
