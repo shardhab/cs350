@@ -40,8 +40,6 @@ public class heapsort {
   }
 
   private static void siftDown(Integer[] nums, int root, int bottom, int lo) {
-    boolean done = false;
-    int max;
     int child;
     int d = nums[lo + root - 1];
 
@@ -51,9 +49,10 @@ public class heapsort {
         child++;
       }
       if(d >= nums[lo + child - 1]) break;
-      swap(nums, lo + root - 1, lo + child - 1);
+      nums[lo + root - 1] = nums[lo + child - 1];
       root = child;
     }
+    nums[lo + root - 1] = d;
   }
 
   private static void swap(Integer[] nums, int first, int second) {
