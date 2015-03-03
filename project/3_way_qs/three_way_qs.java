@@ -39,7 +39,7 @@ public class three_way_qs{
 	}
 
 	public void quicksort(int left, int right){
-		if(left > right)
+		if(left >= right)
 			return;
 
 		int l = left;
