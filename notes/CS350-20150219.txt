@@ -1,0 +1,22 @@
+Symbol hash: variable length hashing. You take more bits as you need them.
+
+Hash functions have two steps, generally:
+1. The hash function
+2. A way of compressing the hash function output to fit into the 
+hash table size, typically through a modulo function.
+
+Open hash tables use more memory because of all the pointers required
+for each word. More than a factor of 2.
+
+The closed hash table could lead to more comparisons because it 
+includes not only collisions, but also any other elements that have
+been moved into a bucket as a result of a different collision.
+
+In a B+ tree, all the data is in the leaves. In a B tree, the data is also
+in the nodes.
+
+If there is data in the nodes, then the tree will not be "as bushy". 
+Therefore, there will be less index strength because we want the
+trees to be bushier in order to decrease the height of the tree.
+
+

@@ -1,0 +1,12 @@
+B-Trees: When we add/subtract, the root does not have to be half full.
+All other nodes do.
+
+The alternative to recombining, is to add "tombstones" where you
+want to delete stuff, and then perform reindexing later to 
+perform all the maintenance at the same time instead of as you go.
+
+In dynamic programming, we just need to keep the last few values
+that we will be needing in the next calculation, and we can get rid
+of previous values that are not used again.
+
+
