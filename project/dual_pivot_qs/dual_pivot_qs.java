@@ -37,7 +37,7 @@ public class dual_pivot_qs {
 	}
 
 	public void quicksort(int left, int right){
-		if(left > right)
+		if(right <= left)
 			return;
 
 		int l = left + 1;
