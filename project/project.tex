@@ -127,7 +127,7 @@
 %   - Author
 %
 
-\newcommand{\hmwkTitle}{Homework\ \#4}
+\newcommand{\hmwkTitle}{Sorting Algorithms}
 \newcommand{\hmwkDueDate}{February 26, 2015}
 \newcommand{\hmwkClass}{CS350 - Algorithms}
 \newcommand{\hmwkClassInstructor}{for Professor Andrew Black}
@@ -193,7 +193,50 @@
 grey box represents the pivot.}\end{doublespace}
 \end{figure}
 
-\begin{algorithmic}
+\section{Mergesort}
+Mergesort is a divide-and-conquer algorithm in which the unsorted array is recursively divided
+in half until each subarray has only one element. Then the pieces are merged back together in 
+order, eventually recombining back into one sorted array. See Figure~\ref{pseudo-mergesort} for the pseudocode representation of Mergesort.
+
+In the first phase of Mergesort, the elements of the array are copied $\log_2(n)$ times until each 
+element is in its own subarray. Although no comparisons are made in this phase of the algorithm,
+this does require $n\log_2 n$ copy operations (each element is copied $\log_2n$ times) 
+and doubles the required space allocation for the array.
+
+In the second phase of Mergesort, the elements of each subarray are combined. In the worst case, 
+each of the two subarrays being combined into one array is reduced by one after each comparison
+until both arrays are empty, for a total of $n-1$ comparisons. Adding these comparisons to the
+number of comparisons that were done to create each of the subarrays gives the following
+recurrence:
+\[
+	C(n) = 2 \cdot C\left(\frac{n}{2}\right) + n-1, C(1) = 0
+\]
+This recurrence is conveniently in the form of the Master Theorem in which
+\[
+	T(n) = a \cdot T\left(\frac{n}{b}\right) +f(n)
+\]
+and $f(n) \in \Theta(n^d)$. For Mergesort, $a = 2, b = 2, d = 1$ and $a = 2 = 2^1 = b^d$. 
+Therefore, according to the Master Theorem, $C(n) \in \Theta(n^d \log n)$. However, in many
+cases, there will need to be less than $n-1$ comparisons in each merge. For instance, if
+all the elements of the left subarray are less than all the elements of the right array, then after
+$\frac{n}{2}$ comparisons after which each element of the left array is placed into the sorted array,
+the elements of the right array can simply be copied to the sorted array without any other
+comparisons. See line~\ref{line:mergesort1} through line~\ref{line:mergesort2} in Figure~\ref{pseudo-mergesort}.
+
+Figure~\ref{example-mergesort} shows an example of an array of numbers being sorted with Mergesort.
+
+Mergesort has many advantages. First of all, our of all the "good" sorting algorithms, it is probably
+the easiest to understand and thus implement. Also, its worst case is better than the worst
+case of Quicksort, which is generally considered a faster algorithm. But its main advantage is that,
+unlike many other sorting algorithms, it is a \textit{stable} sort. That is, two elements that are equal 
+to each other will remain in the same relative order after the algorithm has been completed. 
+
+Mergesort has two main disadvantages. First, it requires a large number of copy operations in both
+phases of the algorithm. Second, it requires $O(n)$ of extra space and cannot be performed 
+in place.
+
+\begin{figure}
+\begin{algorithmic}[1]
 	\Procedure{Mergesort}{$A[0..n-1]$}
 		\State $left \gets A[0..n/2]$
 		\State $right \gets A[n/2 + 1..n-1]$
@@ -216,15 +259,18 @@ grey box represents the pivot.}\end{doublespace}
 			\EndIf
 			\State $k \gets k + 1$
 		\EndWhile
-		\If {$i = left.length$}
+		\If {$i = left.length$} \label{line:mergesort1}
 			\State copy $right[j..right.length - 1]$ to $A[k..left.length + right.length - 1]$
 		\Else
 			\State copy $left[i..left.length - 1]$ to $A[k..left.length + right.length - 1]$
-		\EndIf
+		\EndIf \label{line:mergesort2}
 		\State return $A$
 	\EndProcedure
 \end{algorithmic}
-			
+\caption{Pseudocode for Mergesort}
+\label{pseudo-mergesort}
+\end{figure}
+	
 \begin{figure}[mergesort] \begin{center}
 	\begin{tikzpicture}[
 	level 1/.style={sibling distance=60mm},
@@ -296,8 +342,101 @@ grey box represents the pivot.}\end{doublespace}
 		\draw[->] (node12356.south) -- (end.north);
 		\draw[->] (node012812.south) -- (end.north);
 		\end{scope}
-	\end{tikzpicture}
+	\end{tikzpicture} \caption{An example of Mergesort} \label{example-mergesort}
 \end{center} \end{figure}
+\pagebreak
+
+\begin{figure}
+\begin{algorithmic}
+	\Procedure{3WayQS}{$A[l..r]$}
+		\If{ $l > r$}
+			\State \textbf{return}
+		\EndIf
+
+		\State $left \gets l$
+		\State $right \gets r$
+		\State $i \gets l + 1$
+		\State $pivotIdx \gets l$
+		\State $pivotVal \gets A[pivotIdx]$
+
+		\While{$i <= right$}
+  			\If{$A[i] < pivotVal$}
+				\State $swap(A[i], A[left]$
+    				\State $left \gets left + 1$
+    				\State $i \gets i + 1$
+  			\Else
+				\If{$pivotVal < A[i]$}
+					\State $swap(A[i], A[right])$
+    					\State $right \gets right - 1$
+  				\Else
+    					\State $i \gets i + 1$
+				\EndIf
+			\EndIf
+		\EndWhile
+		\State $3WayQS(l, left - 1)$
+		\State $3WayQS(right + 1, r)$
+	\EndProcedure
+\end{algorithmic}
+\end{figure}
+
+\begin{figure}[3wayquicksort]\begin{doublespace}
+\List{s2/3, 5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
+\List{1, s2/5, 7, 1, 2, 12, 0, 2, s3/8, 3}
+\List{1, s2/8, 7, 1, 2, 12, 0, s3/2, 5, 3}
+\List{1, 2, s2/7, 1, 2, 12, s3/0, 8, 5, 3}
+\List{1, s2/2, s3/0, 1, 2, 12, 7, 8, 5, 3}
+\List{s2/1, s3/0, 2, 1, 2, 12, 7, 8, 5, 3}
+\List{0, 1, 2, 1, 2, s2/12, 7, 8, 5, s3/3}
+\List{0, , 1, , s2/2, s3/1, 2, ,3, ,7, 8, 5, 12}
+\List{0, , 1, , 1, 2, 2, ,3, ,7, s2/8, s3/5, 12}
+\List{0, , 1, , 1, 2, 2, ,3, ,s2/7, s3/5, , 8, 12}
+\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
+\caption{3 Way Quicksort: the blue and red boxes represent the values to be swapped. The 
+grey box represents the pivot.}\end{doublespace}
+\end{figure}
+
+\pagebreak
+\begin{figure}
+\begin{algorithmic}
+	\Procedure{DualPivotQS}{$A[l..r]$}
+		\If{$l > r$}
+  			\State \textbf{return}
+		\EndIf
+		\State $left \gets l$
+		\State $right \gets r$
+		\State $i \gets l + 1$
+		\If{$A[l] > A[r]$}
+  			\State $temp \gets A[l]$
+  			\State $A[l] \gets A[r]$
+  			\State $A[r] \gets temp$
+		\EndIf
+		\While{$i <= right$}
+  			\If{$A[i] < A[l]$}
+    				\State $swap(A[i], A[left$
+    				\State $left \gets left + 1$
+				\State $i \gets i + 1$
+  			\Else 
+				\If{$A[r] < A[i]$}
+    					\State $swap(A[i], A[right]$
+    					\State $right \gets right - 1$
+  				\Else
+    					\State $i \gets i + 1$
+				\EndIf
+			\EndIf
+		\EndWhile
+		\State $left \gets left - 1$
+		\State $swap(A[left], A[l])$
+		\State $right \gets right + 1$
+		\State $swap(A[right], A[r])$
+		\State $DualPivotQS(l, left - 1)$
+		\If{$A[left] < A[right]$}
+  			\State $DualPivotQS(left + 1, right - 1)$
+		\EndIf
+		\State $DualPivotSort(right + 1, r)$
+	\EndProcedure
+\end{algorithmic}
+\end{figure}
+\pagebreak
 
 \begin{figure}[quicksort]\begin{doublespace}
 	\List{p1/3, s2/5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
@@ -322,6 +461,8 @@ grey box represents the pivot.}\end{doublespace}
 \caption{3 Way Sort}\end{doublespace}
 \end{figure}
 
+\pagebreak
+\begin{figure}
 \begin{algorithmic}
 	\Procedure{Heapsort}{$A[0..n-1], lo, high$}
 		\State $length \gets high - lo$
@@ -350,6 +491,7 @@ grey box represents the pivot.}\end{doublespace}
 		\State $A[lo + root - 1] \gets d$
 	\EndProcedure
 \end{algorithmic}
+\end{figure}
 
 \begin{figure}[heapsort]
 	\List{3, 5, 7, 1, 2, 12, 0, 2, 8, 1}
