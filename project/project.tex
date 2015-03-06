@@ -13,6 +13,7 @@
 \usepackage{enumerate}
 \usepackage{setspace}
 \usepackage{subfig}
+\usepackage{listings}
 \usetikzlibrary{arrows,shapes,positioning,shadows,trees}
 
 %
@@ -361,6 +362,12 @@ last element of the array, and the new first element is run through the $heapify
 again, minus the last element of the array. This process is completed until there is only one
 element left to be heapified. At this point, the array is sorted. See Figure~\ref{heapsort}.
 
+Figure~\ref{example-heapsort1} and Figure~\ref{example-heapsort2} show a step-by-step
+example of the second phase of Heapsort. The list of numbers corresponds to the array
+that is the process of being sorted. The tree below each list shows the corresponding
+heap after the heapify process has been completed. The algorithm is complete when there is
+only one element left to heapify.
+
 To calculate the algorithmic efficiency of Heapsort, consider both phases of the algorithm.
 In the first phase, the array is heapified by iterating through each internal node and recursing
 through its children. Let $n$ be the number of nodes with $n = 2^{h+1} - 1$ where $h$ is the height 
@@ -541,6 +548,7 @@ detail later in the paper.
 	\end{tikzpicture}\end{center} 
 	\caption{The first four sorting operations of heapsort. The row of numbers corresponds to the
 	array being sorted. The tree represents the heap.}
+	\label{example-heapsort1}
 \end{figure}
 
 \begin{figure}
@@ -627,15 +635,66 @@ detail later in the paper.
 	\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
 	\caption{The remaining heapsort operations. Notice how the heap gets smaller as
 	the list becomes sorted from right to left.}
+	\label{example-heapsort2}
 \end{figure}
 
+\pagebreak
+\section{Quicksort}
+
+\begin{figure}
+\begin{algorithmic}
+	\Procedure{Quicksort}{A[left..right],left,right}
+		\State $pivot \gets A[(left + right)/2]$
+		\State $l \gets left$
+		\State $r \gets right$
+		\While{$l \le r$}
+			\While{$A[l] < pivot$}
+				\State $i \gets i + 1$
+			\EndWhile
+			\While{$A[r] > pivot$}
+				\State $r \gets r - 1$
+			\EndWhile
+			\If{$l \le r$}
+				\State $swap(A[l], A[r])$
+				\State $l \gets l + 1$
+				\State $r \gets r - 1$
+			\EndIf
+		\EndWhile
+		\If{$left < r$}
+			\State $quicksort(A, left, r)$
+		\EndIf
+		\If{$l < right$}
+			\State $quicksort(A, l, right)$
+		\EndIf
+	\EndProcedure
+\end{algorithmic}
+\caption{Quicksort algorithm}
+\label{pseudo-quicksort}
+\end{figure}
+
+\begin{figure}[quicksort]\begin{doublespace}
+\List{s2/3, 5, 7, 1, p1/2, 12, 0, 2, 8, s3/1} 
+\List{1, s2/5, 7, 1, p1/2, 12, 0, s3/2, 8, 3}
+\List{1, 2, s2/7, 1, p1/2, 12, s3/0, 5, 8, 3}
+\List{s2/1, p1/2, 0, s3/1, , 2, , s2/12, 7, p1/5, 8, s3/3}
+\List{1, s2/2, 0, s3/1, , 2, , 3, s2/7, s3/5, 8, 12}
+\List{1, 1, 0, p1/2, , 2, , 3, p1/5, 7, 8, 12}
+\List{s2/1, p1/1, s3/0,, 2, , 2, , 3,, 5,, s2/7, p1/8, s3/12}
+\List{0, p1/1, 1,, 2, , 2, , 3,, 5,, 7, p1/8, 12}
+\List{0, 1, 1,2, 2, 3, 5, 7, 8, 12}
+\caption{Quicksort: the blue and red boxes represent the values to be swapped. The 
+grey box represents the pivot.}\end{doublespace}
+\end{figure}
+
+\pagebreak
+\section{Three Way Quicksort}
 \begin{figure}
 \begin{algorithmic}
 	\Procedure{3WayQS}{$A[l..r]$}
 		\If{ $l > r$}
 			\State \textbf{return}
 		\EndIf
-
+		
 		\State $left \gets l$
 		\State $right \gets r$
 		\State $i \gets l + 1$
@@ -662,21 +721,6 @@ detail later in the paper.
 \end{algorithmic}
 \end{figure}
 
-\section{Quicksort}
-\begin{figure}[quicksort]\begin{doublespace}
-\List{s2/3, 5, 7, 1, p1/2, 12, 0, 2, 8, s3/1} 
-\List{1, s2/5, 7, 1, p1/2, 12, 0, s3/2, 8, 3}
-\List{1, 2, s2/7, 1, p1/2, 12, s3/0, 5, 8, 3}
-\List{s2/1, p1/2, 0, s3/1, , 2, , s2/12, 7, p1/5, 8, s3/3}
-\List{1, s2/2, 0, s3/1, , 2, , 3, s2/7, s3/5, 8, 12}
-\List{1, 1, 0, p1/2, , 2, , 3, p1/5, 7, 8, 12}
-\List{s2/1, p1/1, s3/0,, 2, , 2, , 3,, 5,, s2/7, p1/8, s3/12}
-\List{0, p1/1, 1,, 2, , 2, , 3,, 5,, 7, p1/8, 12}
-\List{0, 1, 1,2, 2, 3, 5, 7, 8, 12}
-\caption{Quicksort: the blue and red boxes represent the values to be swapped. The 
-grey box represents the pivot.}\end{doublespace}
-\end{figure}
-
 \begin{figure}[3wayquicksort]\begin{doublespace}
 \List{s2/3, 5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
 \List{1, s2/5, 7, 1, 2, 12, 0, 2, s3/8, 3}
@@ -689,7 +733,7 @@ grey box represents the pivot.}\end{doublespace}
 \List{0, , 1, , 1, 2, 2, ,3, ,7, s2/8, s3/5, 12}
 \List{0, , 1, , 1, 2, 2, ,3, ,s2/7, s3/5, , 8, 12}
 \List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
-\caption{3 Way Quicksort: the blue and red boxes represent the values to be swapped. The 
+\caption{Three Way Quicksort: the blue and red boxes represent the values to be swapped. The 
 grey box represents the pivot.}\end{doublespace}
 \end{figure}
 
@@ -755,10 +799,122 @@ grey box represents the pivot.}\end{doublespace}
 	\List{0, p1/1, 1, 2, 2, , 3, , 7, 5, p1/8, 12}
 	\List{0, p1/1, 1, 2, 2, , 3, , s2/7, s3/5, 8, 12}
 	\List{0, p1/1, 1, 2, 2, , 3, , 5, 7, 8, 12}
-\caption{3 Way Sort}\end{doublespace}
+\caption{Three Way Quicksort}\end{doublespace}
 \end{figure}
 
 \pagebreak
+\section{Introsort}
 
+\section{Implementation}
+
+\begin{figure}
+\begin{lstlisting}
+public static Integer[] mergesort(Integer[] nums) { 
+   System.arraycopy(nums,0,left,0,left.length);
+   System.arraycopy(nums,left.length,right,0,right.length);
+   left = mergesort(left);
+   right = mergesort(right);
+   nums = merge(left,right);
+   return nums;
+}
+
+public static Integer[] merge(Integer[] left, Integer[] right) {
+   while(lcount < left.length && rcount < right.length) {
+      if(left[lcount] < right[rcount]) {
+         sorted[i] = left[lcount];
+         lcount++;
+      }
+      else {
+         sorted[i] = right[rcount];
+         rcount++;
+      }
+      i++;
+   }
+   System.arraycopy(left,lcount,sorted,i,left.length - lcount);
+   System.arraycopy(right,rcount,sorted,i,right.length - rcount);
+   return sorted;
+}
+\end{lstlisting}
+\caption{Abbreviated version of Mergesort}
+\label{code-mergesort}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+private static void heapify(Integer[] nums,int root,int left,int right) {
+   int temp = nums[left+root-1];
+   while (root*2 <= right) {
+      child = 2*root;
+      if(child < right && nums[left+child-1] < nums[left+child]) {
+        child++;
+      }
+      if(temp >= nums[left+child-1]) break;
+      nums[left+root-1] = nums[left+child-1];
+      root = child;
+   }
+   nums[left+root-1] = temp;
+}
+\end{lstlisting}
+\caption{Abbreviated version of heapify phase of Heapsort}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+public void quicksort(int left,int right){
+   int pivot = nums[(left+right)/2];
+   while(l<=r) {
+      while(nums[l]<pivot)
+         ++l;
+      while(nums[r]>pivot)
+         --r;
+      if(l<=r) {
+         swap(nums[l],nums[r])
+	++l;
+	--r;
+      }
+   }
+   if(left < r)
+      quicksort(left,r);
+   if(l < right)
+      quicksort(l,right);
+}
+\end{lstlisting}
+\caption{Abbreviated version of Quicksort}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+public void dual_pivot_qs(int left,int right){
+   if(right <= left) return;
+   int l = left+1;
+   int r = right-1;
+   int i = left+1;
+   if(nums[left]>nums[right])
+      swap(nums[left],nums[right])
+   while(i <= r){
+      if(nums[i] < nums[left]) {
+         swap(nums[i],nums[l]
+	++l;
+	++i;
+      }
+      else if(nums[right]<nums[i]) {
+         swap(nums[i],nums[r])
+         --r;
+      }
+      else
+         ++i;
+   }
+   --l;
+   swap(nums[l],nums[left]);
+   ++r;
+   swap(nums[r],nums[right]);
+   quicksort(left,l-1);
+   if(nums[l] < nums[r])
+      dual_pivot_qs(l+1,r-1);
+   dual_pivot_qs(r+1,right);
+}
+\end{lstlisting}
+\caption{Abbreviated version of Dual Pivot Quicksort}
+\end{figure}
 
 \end{document}
