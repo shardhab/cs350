@@ -12,6 +12,7 @@
 \usepackage{parskip}
 \usepackage{enumerate}
 \usepackage{setspace}
+\usepackage{subfig}
 \usetikzlibrary{arrows,shapes,positioning,shadows,trees}
 
 %
@@ -179,35 +180,22 @@
 
 \pagebreak
 
-\begin{figure}[quicksort]\begin{doublespace}
-\List{s2/3, 5, 7, 1, p1/2, 12, 0, 2, 8, s3/1} 
-\List{1, s2/5, 7, 1, p1/2, 12, 0, s3/2, 8, 3}
-\List{1, 2, s2/7, 1, p1/2, 12, s3/0, 5, 8, 3}
-\List{s2/1, p1/2, 0, s3/1, , 2, , s2/12, 7, p1/5, 8, s3/3}
-\List{1, s2/2, 0, s3/1, , 2, , 3, s2/7, s3/5, 8, 12}
-\List{1, 1, 0, p1/2, , 2, , 3, p1/5, 7, 8, 12}
-\List{s2/1, p1/1, s3/0,, 2, , 2, , 3,, 5,, s2/7, p1/8, s3/12}
-\List{0, p1/1, 1,, 2, , 2, , 3,, 5,, 7, p1/8, 12}
-\List{0, 1, 1,2, 2, 3, 5, 7, 8, 12}
-\caption{Quicksort: the blue and red boxes represent the values to be swapped. The 
-grey box represents the pivot.}\end{doublespace}
-\end{figure}
+
 
 \section{Mergesort}
 Mergesort is a divide-and-conquer algorithm in which the unsorted array is recursively divided
-in half until each subarray has only one element. Then the pieces are merged back together in 
-order, eventually recombining back into one sorted array. See Figure~\ref{pseudo-mergesort} for the pseudocode representation of Mergesort.
+in half until each subarray has only one element. After this phase is completed, the pieces are 
+merged back together in order, eventually recombining into one sorted array. See 
+Figure~\ref{pseudo-mergesort} for the pseudocode representation of Mergesort.
 
 In the first phase of Mergesort, the elements of the array are copied $\log_2(n)$ times until each 
 element is in its own subarray. Although no comparisons are made in this phase of the algorithm,
 this does require $n\log_2 n$ copy operations (each element is copied $\log_2n$ times) 
 and doubles the required space allocation for the array.
 
-In the second phase of Mergesort, the elements of each subarray are combined. In the worst case, 
-each of the two subarrays being combined into one array is reduced by one after each comparison
-until both arrays are empty, for a total of $n-1$ comparisons. Adding these comparisons to the
-number of comparisons that were done to create each of the subarrays gives the following
-recurrence:
+In the second phase of Mergesort, the elements of each subarray are combined: the first elements of each subarray are compared and the smaller element is moved from its subarray into the sorted array. In the worse case, the subarrays are alternately reduced by one, leading to a total of $n-1$
+comparisons. Adding these comparisons to the comparisons required to create each subarray 
+results in the following recurrence:
 \[
 	C(n) = 2 \cdot C\left(\frac{n}{2}\right) + n-1, C(1) = 0
 \]
@@ -217,23 +205,29 @@ This recurrence is conveniently in the form of the Master Theorem in which
 \]
 and $f(n) \in \Theta(n^d)$. For Mergesort, $a = 2, b = 2, d = 1$ and $a = 2 = 2^1 = b^d$. 
 Therefore, according to the Master Theorem, $C(n) \in \Theta(n^d \log n)$. However, in many
-cases, there will need to be less than $n-1$ comparisons in each merge. For instance, if
-all the elements of the left subarray are less than all the elements of the right array, then after
-$\frac{n}{2}$ comparisons after which each element of the left array is placed into the sorted array,
-the elements of the right array can simply be copied to the sorted array without any other
-comparisons. See line~\ref{line:mergesort1} through line~\ref{line:mergesort2} in Figure~\ref{pseudo-mergesort}.
-
+cases, there will less than $n-1$ comparisons in each merge. For instance, if
+all the elements of the left subarray are less than all the elements of the right array, the left
+subarray will be repeatedly reduced after each comparison. After $\frac{n}{2}$ comparisons 
+have been performed, the left subarray will be empty, and all the elements of the right subarray 
+can simply be copied to the sorted array without any further comparisons. 
+See line~\ref{line:mergesort1} through line~\ref{line:mergesort2} in Figure~\ref{pseudo-mergesort}.
 Figure~\ref{example-mergesort} shows an example of an array of numbers being sorted with Mergesort.
 
-Mergesort has many advantages. First of all, our of all the "good" sorting algorithms, it is probably
-the easiest to understand and thus implement. Also, its worst case is better than the worst
+Mergesort has many advantages. First, of all the ``good'' sorting algorithms, Mergesort is probably
+the easiest to understand and thus implement. Second, its worst case is better than the worst
 case of Quicksort, which is generally considered a faster algorithm. But its main advantage is that,
 unlike many other sorting algorithms, it is a \textit{stable} sort. That is, two elements that are equal 
-to each other will remain in the same relative order after the algorithm has been completed. 
+to each other will remain in the same relative order after the algorithm has been completed. This
+can be important when performing repeated searches of different aspects of the same objects.
+For instance, when sorting names, it is common to sort by first name and then by last name.
+If the sort is stable, the first names will remain in order while the last names are sorted, resulting
+in names in a correct final sort. An unstable sorting algorithm would be unsuitable for this
+type of sorting problem.
 
 Mergesort has two main disadvantages. First, it requires a large number of copy operations in both
 phases of the algorithm. Second, it requires $O(n)$ of extra space and cannot be performed 
-in place.
+in place. That said, its simplicity, relative speed, and stability make it a good sorting algorithm
+for many applications.
 
 \begin{figure}
 \begin{algorithmic}[1]
@@ -245,7 +239,7 @@ in place.
 		\State $A \gets merge(left, right, A)$
 	\EndProcedure
 	
-	\Procedure{Merge}{$left, right$}
+	\Procedure{Merge}{$left, right, A$}
 		\State $i \gets 0$
 		\State $j \gets 0$
 		\State $k \gets 0$
@@ -346,6 +340,295 @@ in place.
 \end{center} \end{figure}
 \pagebreak
 
+\section{Heapsort}
+A heap is a type of binary tree that is implemented within an array. It has a couple of important
+properties such as being complete (although there may be empty nodes in the right leaves of the
+last level) and having parental dominance. That is, each parent node has a larger value than either of the child nodes. 
+
+The heap nodes are constructed from the array indices as shown in Figure~\ref{heap}. That is,
+the first element of the array corresponds to the root node, the second and third elements go
+into the immediate children of the root node, and so forth. Therefore, all the interior nodes
+are located in the indices that are equal to less than $(n-1)/2$. That is, in an array with seven
+elements, the indices of the array that are less than 3 (0, 1, 2) are in the interior nodes. Nodes
+equal to and greater than 3 are located in the leaves of the heap.
+
+This is important because we "heapify" an array by heapifying each interior node, starting from the
+last one. That is, each node is compared against its child nodes. If a child has a larger value,
+it is switched with the parent node. This process is described in pseudocode in Figure~\ref{heapify}.
+Once the array has been turned into a heap, the largest value will be in the node of the heap, which
+is the first element of the array. To sort the array, the first element of the array is switched with the
+last element of the array, and the new first element is run through the $heapify$ procedure
+again, minus the last element of the array. This process is completed until there is only one
+element left to be heapified. At this point, the array is sorted. See Figure~\ref{heapsort}.
+
+To calculate the algorithmic efficiency of Heapsort, consider both phases of the algorithm.
+In the first phase, the array is heapified by iterating through each internal node and recursing
+through its children. Let $n$ be the number of nodes with $n = 2^{h+1} - 1$ where $h$ is the height 
+of the tree. When examining a node, two comparisons are made: 
+one between the node's children, and one between the maximum child and the node itself. If the 
+node switches with its child, another two comparisons are made with the child and its children and so 
+on for the height of the tree, resulting in $2(h-i)$ total comparisons for that node. There are $2^h$ 
+nodes per level. Therefore, the number of comparisons that are made are:
+\begin{align*}
+	C(h) &= \sum_{i=0}^{h-1} 2(h-i) 2^i = \sum_{j=1}^{h}2j 2^{h-j} = 2 \sum_{j=1}^h \frac{j2^h}{2^j}\\
+	&= 2^{h+1} \sum_{j=1}^h \frac{j}{2^j} \le 2^{h+1}\sum_{j=1}^{\infty} \frac{j}{2^j}
+\end{align*}
+But 
+\[
+	\sum_{j=1}^{\infty} \frac{j}{2^j} = 2.
+\]
+So:
+\[
+	C(h) \le 2^{h+1} \cdot 2 = 2(n + 1) \in O(n)
+\] 
+In the second phase, the first node is swapped with the last node, and heapify is performed on
+the new first node, which involves two comparisons a level for up to the height of the tree. 
+This equals $2 \log_2(n-1)$ comparisons with $n$ getting smaller with each iteration. 
+\[
+	\sum \log_2 n \in O(n \log n)
+\]
+Therefore, the total number of comparisons for Heapsort is $O(n) + O(n\log n) = O(n\log n).$
+
+Unlike Mergesort, Heapsort does not require any additional space and can be performed
+completely in place. It is an iterative algorithm as opposed to a recursive algorithm, which
+can be an important characteristic for some types of inputs. This will be discussed in some 
+detail later in the paper.
+
+\begin{figure}[heap]
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance=1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{0}
+				child{node{1}
+					child{node{3}}
+					child{node{4}}}
+				child{node{2}
+					child{node{5}}
+					child{node{6}}};
+		\end{scope}
+	\end{tikzpicture}
+	\caption{Constructing a heap. The numbers shown in the nodes correspond to the array indices.}
+	\label{heap}\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{algorithmic}[1]
+	\Procedure{heapify}{$A[lo..length], root, lo, length)$}
+		\State $temp \gets A[lo + root - 1]$
+		\While{$root * 2 \le high$}
+			\State $child \gets 2 * root$
+			\If{$child < length$ AND $A[lo + child - 1] \le A[lo + child]$}
+				\State $child \gets child + 1$ 
+				\Comment{Choose the larger child}
+			\EndIf
+			\If{$temp \ge A[lo + child - 1]$}
+				\State break 
+				\Comment{If parent is bigger than largest child then done}
+			\EndIf
+			\State $A[lo + root - 1] = A[lo + child - 1]$
+			\State $root = child$ 
+			\Comment{The child needs to be checked now}
+		\EndWhile
+		\State $A[lo + root - 1] \gets temp$
+	\EndProcedure
+\end{algorithmic}
+\caption{The process of heapifying an element of an array}
+\label{heapify}
+\end{figure}
+
+\begin{figure}
+\begin{algorithmic}[1]
+	\Procedure{Heapsort}{$A[lo..high], lo, high$}
+		\State $length \gets high - lo$
+		\For {$i := length/2 \text{ to } 1 \textbf{ step } {-1}$}
+			\State $heapify(A, i, lo, length)$
+		\EndFor
+		\For {$i := length \text{ to } 1 \textbf{ step }{-1}$}
+			\State $swap(A, lo, lo + i - 1)$
+			\State $heapify(A, 1, lo, i-1)$
+		\EndFor
+	\EndProcedure
+\end{algorithmic}
+\caption{Heapsort}
+\label{heapsort}
+\end{figure}
+
+\begin{figure}
+	\List{3, 5, 7, 1, 2, 12, 0, 2, 8, 1}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{12}
+				child{node{8}
+					child{ node{5}
+						child{ node{2}}
+						child{ node{1}}}
+					child{ node{2}
+						child{ node{1}}}}
+				child{ node{7}
+					child{ node{3}}
+					child{ node{0}}};	
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{1, 8, 7, 5, 2, 3, 0, 2, 1, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{8}
+				child{node{5}
+					child{node{2}
+						child{node{1}}
+						child{node{1}}}
+					child{node{2}}}
+				child{node{7}
+					child{node{3}}
+					child{node{0}}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{1, 5, 7, 2, 2, 3, 0, 1, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{7}
+				child{node{5}
+					child{node{2}
+						child{node{1}}}
+					child{node{2}}}
+				child{node{3}
+					child{node{1}}
+					child{node{0}}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{1, 5, 3, 2, 2, 1, 0, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{5}
+				child{node{2}
+					child{node{1}}
+					child{node{2}}}
+				child{node{3}
+					child{node{1}}
+					child{node{0}}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\caption{The first four sorting operations of heapsort. The row of numbers corresponds to the
+	array being sorted. The tree represents the heap.}
+\end{figure}
+
+\begin{figure}
+	\List{0, 2, 3, 1, 2, 1, 5, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{3}
+				child{node{2}
+					child{node{1}}
+					child{node{2}}}
+				child{node{1}
+					child{node{0}}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{0, 2, 1, 1, 2, 3, 5, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{2}
+				child{node{2}
+					child{node{1}}
+					child{node{0}}}
+				child{node{1}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}	
+	\List{0, 2, 1, 1, 2, 3, 5, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{2}
+				child{node{1}
+					child{node{0}}}
+				child{node{1}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{1}
+				child{node{0}}
+				child{node{1}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{1, 0, 1, 2, 2, 3, 5, 7, 8, 12}
+	\vspace{5mm}
+	\begin{center}\begin{tikzpicture}[
+	level 1/.style={sibling distance=30mm},
+	level 2/.style={sibling distance=20mm},
+	level 3/.style={sibling distance=10mm},
+	level distance = 1cm,
+	edge from parent/.style={->,draw},>=latex]
+		\begin{scope}[every node/.style={root}]
+			\node{1}
+				child{node{0}};
+		\end{scope}
+	\end{tikzpicture}\end{center} 
+	\vspace{5mm}
+	\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
+	\caption{The remaining heapsort operations. Notice how the heap gets smaller as
+	the list becomes sorted from right to left.}
+\end{figure}
+
 \begin{figure}
 \begin{algorithmic}
 	\Procedure{3WayQS}{$A[l..r]$}
@@ -379,6 +662,21 @@ in place.
 \end{algorithmic}
 \end{figure}
 
+\section{Quicksort}
+\begin{figure}[quicksort]\begin{doublespace}
+\List{s2/3, 5, 7, 1, p1/2, 12, 0, 2, 8, s3/1} 
+\List{1, s2/5, 7, 1, p1/2, 12, 0, s3/2, 8, 3}
+\List{1, 2, s2/7, 1, p1/2, 12, s3/0, 5, 8, 3}
+\List{s2/1, p1/2, 0, s3/1, , 2, , s2/12, 7, p1/5, 8, s3/3}
+\List{1, s2/2, 0, s3/1, , 2, , 3, s2/7, s3/5, 8, 12}
+\List{1, 1, 0, p1/2, , 2, , 3, p1/5, 7, 8, 12}
+\List{s2/1, p1/1, s3/0,, 2, , 2, , 3,, 5,, s2/7, p1/8, s3/12}
+\List{0, p1/1, 1,, 2, , 2, , 3,, 5,, 7, p1/8, 12}
+\List{0, 1, 1,2, 2, 3, 5, 7, 8, 12}
+\caption{Quicksort: the blue and red boxes represent the values to be swapped. The 
+grey box represents the pivot.}\end{doublespace}
+\end{figure}
+
 \begin{figure}[3wayquicksort]\begin{doublespace}
 \List{s2/3, 5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
 \List{1, s2/5, 7, 1, 2, 12, 0, 2, s3/8, 3}
@@ -395,7 +693,6 @@ in place.
 grey box represents the pivot.}\end{doublespace}
 \end{figure}
 
-\pagebreak
 \begin{figure}
 \begin{algorithmic}
 	\Procedure{DualPivotQS}{$A[l..r]$}
@@ -462,207 +759,6 @@ grey box represents the pivot.}\end{doublespace}
 \end{figure}
 
 \pagebreak
-\begin{figure}
-\begin{algorithmic}
-	\Procedure{Heapsort}{$A[0..n-1], lo, high$}
-		\State $length \gets high - lo$
-		\For {$i := length/2 \text{ to } 1 \textbf{ step } {-1}$}
-			\State $heap(A, i, length, lo)$
-		\EndFor
-		\For {$i := length - 1 \text{ to } 0 \textbf{ step }{-1}$}
-			\State $swap(A, lo, lo + i - 1)$
-			\State $heap(A, 1, i-1, lo)$
-		\EndFor
-	\EndProcedure
-	
-	\Procedure{heap}{$A[0..n-1], root, bottom, lo)$}
-		\State $d \gets A[lo + root - 1]$
-		\While{$root * 2 \le bottom$}
-			\State $child \gets 2 * root$
-			\If{$child < bottom$ AND $A[lo + child - 1] \le A[lo + child]$}
-				\State $child \gets child + 1$
-			\EndIf
-			\If{$d \ge A[lo + child - 1$}
-				\State break
-			\EndIf
-			\State $A[lo + root - 1] = A[lo + child - 1]$
-			\State $root = child$
-		\EndWhile
-		\State $A[lo + root - 1] \gets d$
-	\EndProcedure
-\end{algorithmic}
-\end{figure}
 
-\begin{figure}[heapsort]
-	\List{3, 5, 7, 1, 2, 12, 0, 2, 8, 1}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{12}
-				child{node{8}
-					child{ node{5}
-						child{ node{2}}
-						child{ node{1}}}
-					child{ node{2}
-						child{ node{1}}}}
-				child{ node{7}
-					child{ node{3}}
-					child{ node{0}}};	
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\caption{Heapsort}\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{1, 8, 7, 5, 2, 3, 0, 2, 1, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{8}
-				child{node{5}
-					child{node{2}
-						child{node{1}}
-						child{node{1}}}
-					child{node{2}}}
-				child{node{7}
-					child{node{3}}
-					child{node{0}}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{1, 5, 7, 2, 2, 3, 0, 1, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{7}
-				child{node{5}
-					child{node{2}
-						child{node{1}}}
-					child{node{2}}}
-				child{node{3}
-					child{node{1}}
-					child{node{0}}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-	
-\begin{figure}[heapsort2]
-	\List{1, 5, 3, 2, 2, 1, 0, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{5}
-				child{node{2}
-					child{node{1}}
-					child{node{2}}}
-				child{node{3}
-					child{node{1}}
-					child{node{0}}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{0, 2, 3, 1, 2, 1, 5, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{3}
-				child{node{2}
-					child{node{1}}
-					child{node{2}}}
-				child{node{1}
-					child{node{0}}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{0, 2, 1, 1, 2, 3, 5, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{2}
-				child{node{2}
-					child{node{1}}
-					child{node{0}}}
-				child{node{1}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}	
-\begin{figure}[heapsort2]
-	\List{0, 2, 1, 1, 2, 3, 5, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{2}
-				child{node{1}
-					child{node{0}}}
-				child{node{1}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{1}
-				child{node{0}}
-				child{node{1}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-\end{figure}
-
-\begin{figure}[heapsort2]
-	\List{1, 0, 1, 2, 2, 3, 5, 7, 8, 12}
-	\vspace{5mm}
-	\begin{center}\begin{tikzpicture}[
-	level 1/.style={sibling distance=30mm},
-	level 2/.style={sibling distance=20mm},
-	level 3/.style={sibling distance=10mm},
-	edge from parent/.style={->,draw},>=latex]
-		\begin{scope}[every node/.style={root}]
-			\node{1}
-				child{node{0}};
-		\end{scope}
-	\end{tikzpicture}\end{center} 
-	\vspace{5mm}
-	\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
-\end{figure}
 
 \end{document}
