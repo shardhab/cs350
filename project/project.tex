@@ -640,6 +640,59 @@ detail later in the paper.
 
 \pagebreak
 \section{Quicksort}
+Quicksort is a divide-and-conquer algorithm that divides an array over a chosen pivot and then recursively sorts the subarrays. Quicksort can be done in place and is unstable.
+
+The Quicksort algorithm involves choosing a pivot and rearranging the elements in the array so 
+that the elements less than the pivot are to its left and the elements greater than the pivot are to its 
+right. This effectively splits the original array into two subarrays. There are different ways to 
+implement the partition function, but normally a variation of the so-called Hoare partition is
+used. 
+
+In the Hoare partition method, a pivot is selected (the method used in this research paper merely
+selects the middle element of the array, but there are many different other methods available).
+The array is searched from left to right until a value is found that is larger than the pivot. The index
+of this position is saved, and the array is then searched from right to left until a value is found
+that is less than the pivot. At that point, the two elements are switched, ensuring their final
+positions are on the correct side of the pivot. This process is completed until the left index is
+greater than the right index. At this point, the array partition process has been completed.
+
+This partitioning process is performed recursively on both subarrays until the subarrays consist
+of one element, thus ensuring the array is not only partitioned, but sorted. No combination phase is 
+needed, as is required with Mergesort, because the array is sorted in place. 
+Figure~\ref{pseudo-quicksort} contains the pseudo code Quicksort. 
+Figure~\ref{example-quicksort} demonstrates an array of numbers being sorted with Quicksort.
+
+It is easy to see that the partitioning process itself is linear since each element of the array
+is examined exactly once. However the efficiency of the entire Quicksort algorithm depends
+upon the number of recursive calls that are required to complete the sort. In the best case
+(which turns out to be close to the average case), the pivot's value is the median value. That is, 
+after the array has been sorted, an equal number of elements will be on each side of the median. 
+This divides the array in half. If the pivots for each of these subarrays is similarly selected with the
+median value, the array will be divided into a total of four pieces. If this process continues,
+this leads to $\log_2n$ total recursive calls. When summed with the partition operation, this is
+clearly a $O(n \log n)$ operation.
+
+However, if the value of the pivot is the smallest or the largest values of the array, 
+then the size of the array will only be decreased by a one during the partition process, and the 
+algorithm will end up requiring more recursive calls. In fact, if each pivot
+is selected in a similar poor fashion, the partition operation will be performed on a total of $n-1$ 
+subarrays, resulting in an $O(n^2)$ algorithm.
+
+This makes the efficiency of Quicksort highly dependent upon the composition of its input
+array. In fact, the recursive nature of Quicksort makes it completely unsuitable for some types
+of data sets (as the measurement results described later in this paper will demonstrate). 
+However, in most cases, the efficiency granted Quicksort by the Hoare partition operation makes
+it an ideal sorting algorithm in most situations, and it has been incorporated into many standard
+libraries.
+
+One common situation that Quicksort does not handle very well is when an array has many 
+repeating elements. Figure~\ref{example-quicksort-repeat} demonstrates the initial partitioning
+of an array that has many repeating elements. As the example shows, when the pivot has a value
+that repeats many times, some of the sorts are unproductive, and the resulting array is
+not partitioned very well; there will be values equal to the pivot element in both subarrays.
+Because Quicksort does so poorly in this type of situation, several different variations of Quicksort
+were created to handle this particular situation: Dual Pivot Quicksort and Three Way Quicksort
+are two such variations.
 
 \begin{figure}
 \begin{algorithmic}
@@ -683,9 +736,20 @@ detail later in the paper.
 \List{0, p1/1, 1,, 2, , 2, , 3,, 5,, 7, p1/8, 12}
 \List{0, 1, 1,2, 2, 3, 5, 7, 8, 12}
 \caption{Quicksort: the blue and red boxes represent the values to be swapped. The 
-grey box represents the pivot.}\end{doublespace}
+grey box represents the pivot.}
+\label{example-quicksort}
+\end{doublespace}
 \end{figure}
 
+\begin{figure}\begin{doublespace}
+\List{3, s2/6, 3, 6, p1/6, 8, 3, 8, 6, s3/6}
+\List{3, 6, 3, s2/6, p1/6, 8, 3, 8, s3/6, 6}
+\List{3, 6, 3, 6, s2/6, 8, s3/3, 8, 6, 6}
+\List{3, 6, 3, 6, 3, 8, 6, 8, 6, 6}
+\end{doublespace}
+\caption{The first partitioning of an array with many repeating characters}
+\label{example-quicksort-repeat}
+\end{figure}
 \pagebreak
 \section{Three Way Quicksort}
 \begin{figure}
