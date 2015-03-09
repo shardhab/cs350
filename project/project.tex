@@ -14,6 +14,8 @@
 \usepackage{setspace}
 \usepackage{subfig}
 \usepackage{listings}
+\usepackage{pgfplots}
+\usepackage{url}
 \usetikzlibrary{arrows,shapes,positioning,shadows,trees}
 
 %
@@ -750,21 +752,139 @@ grey box represents the pivot.}
 \caption{The first partitioning of an array with many repeating characters}
 \label{example-quicksort-repeat}
 \end{figure}
-\pagebreak
+
+\section{Dual-Pivot Quicksort}
+The idea behind a dual pivot is that, if partitioning into two pieces leads to an efficient
+sort, then partitioning into three pieces could improve upon this efficiency. In 1975, Sedgewick
+proposed a dual pivot variation of Quicksort\cite{Sedgewick75}, but it turned out to be less
+efficient than Quicksort because of the additional overhead introduced by the second pivot.
+Until 2009, it was assumed that any other implementations of a dual pivot Quicksort would
+have similar problems. But then Vladimir Yaroslavskiy, with the help of Jon Bentley and Joshua
+Bloch, came out with an implementation of Dual-Pivot Quicksort that has since been 
+incorporated into Java 7 as the standard sort on primitive data types.
+
+Dual-Pivot Quicksort tweaks the original quicksort by adding a second pivot. Two pivots are chosen, 
+typically at the left and right ends of the array. If the value of the left pivot is greater than the right 
+pivot, they are swapped.  
+
+During the partitioning phase, the array is divided into four parts:
+part one contains the elements less than the first pivot, part two contains the elements that are 
+greater than or equal to the first pivot and less than or equal to the second pivot, part three contains 
+the elements greater than the second pivot, and part four contains the elements that have not
+yet been examined. As the algorithm runs, the elements in part four are sorted into their proper
+location (part one, part two, or part three) until part four is empty. The first pivot is then swapped 
+with the last element of part one and the second pivot is swapped with the first element of part 
+three. This partitioning is then performed recursively on each of the remaining three parts of the 
+array until the entire array has been sorted. 
+
+According to Yaroslavskiy 2009\cite{Yaroslavskiy09}, Dual Pivot Quicksort requires a fewer 
+average number of swaps than the classical Quicksort and thus is a more efficient algorithm.
+Since then, however, there have been some other papers published that dispute this argument.
+Wild 2012\cite{Wild12} contends that Dual Pivot has, in fact, fewer comparisons but 
+more swaps. A recent publication, Wild 2015\cite{Wild15} compares the number of byte code
+instructions of Quicksort with Yaroslavskiy's Dual Pivot algorithm and finds that the Dual Pivot
+algorithm requires more byte code instructions, on average. Wild's findings, both in 2012 and 2015,
+contradict Yaroslavskiy's measurements performed in 2009. The experimental findings led
+to it being incorporated into Java 7 seem to indicate that it is more efficient than Quicksort. But
+the reason for this efficiency seems to be somewhat in dispute, at least for the moment.
+In any case, this seems to be a topic for further discussion and research.
+
+The actual Yaroslavskiy Dual Pivot Quicksort algorithm is somewhat complicated, and
+its implementation was beyond the scope of what we wanted to tackle in this paper. Therefore,
+we instead implemented a simplified version of the Dual Pivot Quicksort. The pseudocode for
+this algorithm is shows in Figure~\ref{pseudo-dualpivot}. Figure~\ref{example-dualpivot} contains 
+an example of an array sorted using its algorithm.
+
+\begin{figure}
+\begin{algorithmic}
+	\Procedure{DualPivotQS}{$A[l..r]$}
+		\If{$l > r$}
+  			\State \textbf{return}
+		\EndIf
+		\State $left \gets l$
+		\State $right \gets r$
+		\State $i \gets l + 1$
+		\If{$A[l] > A[r]$}
+			\State swap(Al], A[r])
+		\EndIf
+		\While{$i <= right$}
+  			\If{$A[i] < A[l]$}
+    				\State $swap(A[i], A[left])$
+    				\State $left \gets left + 1$
+				\State $i \gets i + 1$
+  			\Else 
+				\If{$A[r] < A[i]$}
+    					\State $swap(A[i], A[right])$
+    					\State $right \gets right - 1$
+  				\Else
+    					\State $i \gets i + 1$
+				\EndIf
+			\EndIf
+		\EndWhile
+		\State $left \gets left - 1$
+		\State $swap(A[left], A[l])$
+		\State $right \gets right + 1$
+		\State $swap(A[right], A[r])$
+		\State $DualPivotQS(l, left - 1)$
+		\If{$A[left] < A[right]$}
+  			\State $DualPivotQS(left + 1, right - 1)$
+		\EndIf
+		\State $DualPivotQS(right + 1, r)$
+	\EndProcedure
+\end{algorithmic}
+\caption{Pseudocode for Dual Pivot Quicksort}
+\label{pseudo-dualpivot}
+\end{figure}
+
+\begin{figure}\begin{doublespace}
+\List{s2/3, 5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
+\List{1, s2/5, 7, 1, 2, 12, 0, 2, s3/8, 3}
+\List{1, s2/8, 7, 1, 2, 12, 0, s3/2, 5, 3}
+\List{1, 2, s2/7, 1, 2, 12, s3/0, 8, 5, 3}
+\List{1, s2/2, s3/0, 1, 2, 12, 7, 8, 5, 3}
+\List{s2/1, s3/0, 2, 1, 2, 12, 7, 8, 5, 3}
+\List{0, 1, 2, 1, 2, s2/12, 7, 8, 5, s3/3}
+\List{0, , 1, , s2/2, s3/1, 2, ,3, ,7, 8, 5, 12}
+\List{0, , 1, , 1, 2, 2, ,3, ,7, s2/8, s3/5, 12}
+\List{0, , 1, , 1, 2, 2, ,3, ,s2/7, s3/5, , 8, 12}
+\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
+\end{doublespace}
+\caption{Dual Pivot Quicksort. The red and blue boxes represent the elements that will
+be swapped next.}
+\label{example-dualpivot}
+\end{figure}
+
 \section{Three Way Quicksort}
+Dijkstra's Three Way Quicksort uses a single pivot, but partitions the elements into three different 
+sections. During the partition process, there are four parts: elements less than the pivot, elements 
+equal to the pivot, elements greater than the pivot, and the area not yet checked. An index 
+advances through the area not yet checked. There are three possibilities: if the value at the 
+index is less than the pivot value, the value at the index is swapped with the value at the 
+left boundary and both the left boundary and the index are incremented. If the index value is 
+greater than the pivot, it is swapped with the value at the right boundary, and the right boundary
+is decremented. If the index value is equal to the pivot, the index is incremented. This is 
+recursively done until the array has been sorted. When all elements have been partitioned,
+Three Way Quicksort is called recursively on the subarray to the left of the pivot values
+and the subarray to the right of the pivot values. 
+
+In particular, this partition method handles inputs with many repeating elements. Instead of
+pivot values ending up on either side of the partition where they will need to be partitioned
+again, the pivot values end up in the middle of the array where they can be considered sorted.
+Figure~\ref{pseudo-threeway} contains the pseudocode for Three Way Quicksort. 
+Figure~\ref{example-threeway} has an example of an array being sorted with Three Way
+Quicksort.
+
 \begin{figure}
 \begin{algorithmic}
 	\Procedure{3WayQS}{$A[l..r]$}
 		\If{ $l > r$}
 			\State \textbf{return}
 		\EndIf
-		
 		\State $left \gets l$
 		\State $right \gets r$
 		\State $i \gets l + 1$
 		\State $pivotIdx \gets l$
 		\State $pivotVal \gets A[pivotIdx]$
-
 		\While{$i <= right$}
   			\If{$A[i] < pivotVal$}
 				\State $swap(A[i], A[left]$
@@ -783,65 +903,9 @@ grey box represents the pivot.}
 		\State $3WayQS(right + 1, r)$
 	\EndProcedure
 \end{algorithmic}
+\caption{Pseudocode for Three Way Quicksort}
+\label{pseudo-threeway}
 \end{figure}
-
-\begin{figure}[3wayquicksort]\begin{doublespace}
-\List{s2/3, 5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
-\List{1, s2/5, 7, 1, 2, 12, 0, 2, s3/8, 3}
-\List{1, s2/8, 7, 1, 2, 12, 0, s3/2, 5, 3}
-\List{1, 2, s2/7, 1, 2, 12, s3/0, 8, 5, 3}
-\List{1, s2/2, s3/0, 1, 2, 12, 7, 8, 5, 3}
-\List{s2/1, s3/0, 2, 1, 2, 12, 7, 8, 5, 3}
-\List{0, 1, 2, 1, 2, s2/12, 7, 8, 5, s3/3}
-\List{0, , 1, , s2/2, s3/1, 2, ,3, ,7, 8, 5, 12}
-\List{0, , 1, , 1, 2, 2, ,3, ,7, s2/8, s3/5, 12}
-\List{0, , 1, , 1, 2, 2, ,3, ,s2/7, s3/5, , 8, 12}
-\List{0, 1, 1, 2, 2, 3, 5, 7, 8, 12}
-\caption{Three Way Quicksort: the blue and red boxes represent the values to be swapped. The 
-grey box represents the pivot.}\end{doublespace}
-\end{figure}
-
-\begin{figure}
-\begin{algorithmic}
-	\Procedure{DualPivotQS}{$A[l..r]$}
-		\If{$l > r$}
-  			\State \textbf{return}
-		\EndIf
-		\State $left \gets l$
-		\State $right \gets r$
-		\State $i \gets l + 1$
-		\If{$A[l] > A[r]$}
-  			\State $temp \gets A[l]$
-  			\State $A[l] \gets A[r]$
-  			\State $A[r] \gets temp$
-		\EndIf
-		\While{$i <= right$}
-  			\If{$A[i] < A[l]$}
-    				\State $swap(A[i], A[left$
-    				\State $left \gets left + 1$
-				\State $i \gets i + 1$
-  			\Else 
-				\If{$A[r] < A[i]$}
-    					\State $swap(A[i], A[right]$
-    					\State $right \gets right - 1$
-  				\Else
-    					\State $i \gets i + 1$
-				\EndIf
-			\EndIf
-		\EndWhile
-		\State $left \gets left - 1$
-		\State $swap(A[left], A[l])$
-		\State $right \gets right + 1$
-		\State $swap(A[right], A[r])$
-		\State $DualPivotQS(l, left - 1)$
-		\If{$A[left] < A[right]$}
-  			\State $DualPivotQS(left + 1, right - 1)$
-		\EndIf
-		\State $DualPivotSort(right + 1, r)$
-	\EndProcedure
-\end{algorithmic}
-\end{figure}
-\pagebreak
 
 \begin{figure}[quicksort]\begin{doublespace}
 	\List{p1/3, s2/5, 7, 1, 2, 12, 0, 2, 8, s3/1} 
@@ -863,14 +927,95 @@ grey box represents the pivot.}\end{doublespace}
 	\List{0, p1/1, 1, 2, 2, , 3, , 7, 5, p1/8, 12}
 	\List{0, p1/1, 1, 2, 2, , 3, , s2/7, s3/5, 8, 12}
 	\List{0, p1/1, 1, 2, 2, , 3, , 5, 7, 8, 12}
-\caption{Three Way Quicksort}\end{doublespace}
+	\end{doublespace}
+	\caption{Three Way Quicksort}\label{example-threeway}
 \end{figure}
 
 \pagebreak
 \section{Introsort}
+Introsort, invented by David Musser in 1997,  is another variation of Quicksort that takes a different 
+approach to solving Quicksort's
+shortcomings. Instead of modifying Quicksort to handle the specific inputs for which Quicksort
+is particularly bad, Introsort handles the recursion problem itself. That is, there are inputs that
+require a large number of recursive calls within Quicksort. During a recursive call within a 
+program, the current state of the program is
+saved onto the program's stack, and the function is called again. If too many recursive calls are
+made, the stack will eventually fill up enough to meet the heap, which is stored at the other end
+of the program's address space. When there is no space left, the program throws a stack
+exception. This is sometimes called ``blowing the stack.''
+
+When the input array into Quicksort is large, and the resulting recursive calls are deep enough,
+Quicksort (and many of its variations) will blow the stack of the program. Since it may not always
+be possible to know what type of input is being passed into the sort function or whether or
+not that input will cause this stack problem, Introsort was created to handle the recursion problem
+itself.
+That is, a variable is passed to each call in order to keep track of the recursive depth. When
+this depth exceeds a particular value (usually related to $\log_2$ of the original $n$, the sort 
+switches over the Heapsort, a slower but more reliable algorithm.
+
+This gives Introsort the best of both worlds; for most inputs, its speed nearly matches the
+speed of Quicksort (some overhead is used to track the recursive depth variable), but when
+the depth of recursion is great enough to indicate that Introsort is having trouble with the
+input, the program switches over to Heapsort to complete the sort.
+
+\begin{figure}
+\begin{algorithmic}
+	\Procedure{Introsort}{$A[l..r], depth$}
+		\If{$length(A) \le 1$}
+			\State \textbf{return}
+		\EndIf
+		\If{$depth = 0$}
+			\State $heapsort(A)$
+		\Else
+			\State $p \gets partition(A,p)$
+			\State $introsort(A[0..p], depth - 1)$
+			\State $introsort(A[p+1..length(A) - 1], depth - 1)$
+		\EndIf
+	\EndProcedure
+\end{algorithmic}
+\end{figure}
 
 \section{Implementation}
+This project involved the implementation of six different programs in Java: Mergesort,
+Heapsort, Quicksort, Dual Pivot Quicksort, Three Way Quicksort, and Introsort. Each
+program was tested against XXX types of inputs including pseudo-random numbers,
+sorted numbers, reverse sorted numbers, numbers with many repeats, and almost-sorted
+numbers.
 
+An abbreviated version of each program is shown in Figures~\ref{code-mergesort}-
+~\ref{code-introsort}. In each case, some details have been omitted for brevity including
+the declaration and initialization of variables.
+
+Dual Pivot:
+Typically dual-pivot uses insertion sort if 
+the length of the array is small, but because we were testing on large arrays, we left out this 
+implementation. 
+
+The disadvantages are the same in that the worst case is ?(n2) and it is not a stable sort. An 
+additional problem seems to be dealing with very large arrays that are in sorted, reverse sorted, or 
+nearly sorted order. We discovered that dual-pivot quicksort suffered stack overflow at a fairly low 
+array size (several thousand) and was unable to sort any of the lists that we used due to their size 
+and the number of recursive calls that needed to be made.  We checked this issue with an 
+implementation created by Princeton University and discovered that theirs blew up with stack 
+overflow as well. Clearly, this is useful for getting rid of quadratic scenarios with regular quicksort, 
+but it seems to be better used on totally random number, duplicate numbers, and smaller sorted 
+arrays.
+
+Three Way Quicksort
+The advantages to the Three Way Quicksort is the same as dual sort, it is able to maintain 
+?(nlogn) in situations where regular quicksort would have ?(n2). It is also sorted in place with e space 
+complexity of ?(1) and maintains ?(nlogn) complexity in the average case.
+
+The disadvantages of 3-way quicksort are that it is also not a stable sort, and it also faces some, but not
+all, of the issues that Dual-Pivot sort faces with very large sorted numbers. 3-way quicksort was able to 
+
+sort reverse numbers, but had stack overflow on sorted numbers, just like dual-pivot quicksort did. It 
+
+was able to handle nearly sorted arrays, but ended with stack overflow when the array size increased to 
+15 million. This is another algorithm that is more useful than regular quicksort in certain scenarios, but 
+
+would be unable to keep up if very large arrays of potentially sorted data needed to be checked.
+ 
 \begin{figure}
 \begin{lstlisting}
 public static Integer[] mergesort(Integer[] nums) { 
@@ -958,8 +1103,8 @@ public void dual_pivot_qs(int left,int right){
    while(i <= r){
       if(nums[i] < nums[left]) {
          swap(nums[i],nums[l]
-	++l;
-	++i;
+	 ++l;
+	 ++i;
       }
       else if(nums[right]<nums[i]) {
          swap(nums[i],nums[r])
@@ -979,6 +1124,325 @@ public void dual_pivot_qs(int left,int right){
 }
 \end{lstlisting}
 \caption{Abbreviated version of Dual Pivot Quicksort}
+\label{code-dualpivot}
 \end{figure}
 
+\begin{figure}
+\begin{lstlisting}
+public void three_way_qs(int left, int right){
+  if(left >= right)
+   return;
+  int l = left;
+  int r = right;
+  int i = left + 1;		
+  int pivotI = left;
+  int pivotV = nums[pivotI];
+  while(i <= r){
+    if(nums[i] < pivotV) {
+      swap(nums[i],nums[l]);
+      ++l;
+      ++i;
+    }
+    else if(pivotV < nums[i]) {
+      swap(nums[i], nums[r]);
+      --r;
+    }
+    else { 
+      ++i;
+    }
+  }
+  quicksort(left, l - 1);
+  quicksort(r + 1, right);
+}
+\end{lstlisting}
+\caption{Abbreviated version of Three Way Quicksort}
+\label{code-threeway}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+public static void introsort(Integer[] input, int maxdepth, int left, int right) {
+    if(maxdepth == 0) {
+      heap.heapsort(input, left, right);
+    }
+    int pivot = input[(left + right) / 2];
+    int l = left;
+    int r = right;
+    while(l <= r) {
+      while(input[l] < pivot)
+        ++l;
+      while(input[r] > pivot)
+        --r;
+      if(l <= r) {
+        swap(input[l], input[r]);
+        ++l;
+        --r;
+      }
+    }
+    if(left < r)
+      introsort(input, maxdepth - 1, left, r);
+    if(l < right)
+      introsort(input, maxdepth - 1, l, right);
+}
+\end{lstlisting}
+\caption{Abbreviated version of Introsort}
+\label{code-introsort}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Sorting Pseudo-Random Numbers},
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in seconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=50,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, .3)(1, .7)(5,5)(10,13)(15,20)(20,28)(25,37)(30,46)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, .2)(1, .3)(5, 2)(10,4)(15,7)(20,9)(25,12)(30,14)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,.1)(1,.2)(5,1)(10,3)(15,4)(20,6)(25,7)(30,9)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=cyan,
+    mark=diamond,
+    ]
+    coordinates {
+    (.5,.2)(1,.3)(5,2)(10,3)(15,5)(20,7)(25,9)(30,11)
+    };
+    \addlegendentry{Dual Pivot QS}
+\addplot[
+    color=black,
+    mark=star,
+    ]
+    coordinates {
+    (.5,.2)(1,.4)(5,2)(10,4)(15,7)(20,10)(25,12)(30,14)
+    };
+    \addlegendentry{Three Way QS}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,.2)(1,.3)(5,2)(10,4)(15,5)(20,7)(25,9)(30,11)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Sorting Pre-Sorted Numbers},
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=6000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 107)(1, 171)(5,978)(10,1717)(15,2728)(20,4122)(25,5245)(30,5903)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, 73)(1, 147)(5, 648)(10,1365)(15,2219)(20,2912)(25,3842)(30,4615)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,29)(1,45)(5,206)(10,348)(15,577)(20,879)(25,1206)(30,1218)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,30)(1,47)(5,219)(10,386)(15,617)(20,968)(25,1284)(30,1328)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Reverse Sorted Numbers},
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=9000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 99)(1, 200)(5,1133)(10,2470)(15,3919)(20,5753)(25,7299)(30,8864)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5,69)(1,130)(5,678)(10,1463)(15,2216)(20,2964)(25,3845)(30,4612)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,72)(1,85)(5,205)(10,414)(15,699)(20,1176)(25,1577)(30,1506)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,71)(1,85)(5,215)(10,424)(15,714)(20,1225)(25,1627)(30,1532)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Sorting Duplicated Numbers},
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=6000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 75)(1, 133)(5,681)(10,1374)(15,2060)(20,2748)(25,2873)(30,4046)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, 90)(1, 191)(5, 974)(10,1961)(15,2980)(20,3745)(25,4167)(30,5101)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,83)(1,105)(5,417)(10,881)(15,1283)(20,1799)(25,1897)(30,2431)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=cyan,
+    mark=diamond,
+    ]
+    coordinates {
+    (.5,46)(1,62)(5,188)(10,316)(15,499)(20,682)(25,688)(30,915)
+    };
+    \addlegendentry{Dual Pivot QS}
+\addplot[
+    color=black,
+    mark=star,
+    ]
+    coordinates {
+    (.5,33)(1,52)(5,163)(10,288)(15,457)(20,623)(25,689)(30,865)
+    };
+    \addlegendentry{Three Way QS}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,101)(1,111)(5,446)(10,889)(15,1368)(20,1818)(25,1952)(30,2616)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+\begin{thebibliography}{9}
+
+\bibitem{Yaroslavskiy09}
+  Vladimir Yaroslavskiy,
+  \emph{Dual-Pivot Quicksort algorithm},
+  \url{http://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf},
+  Sept 2009.
+  
+\bibitem{Wild12}  
+Sebastian Wild and Markus E. Nebel,
+Average Case Analysis of Java 7?s Dual Pivot Quicksort,
+In Leah Epstein and Paolo Ferragina, editors, 
+European Symposium on Algorithms 2012, 
+volume 7501 of LNCS, pages 825?836. Springer, 2012,
+\url{http://www.researchgate.net/profile/Sebastian_Wild/publication/230766496_Average_Case_Analysis_of_Java_7%27s_Dual_Pivot_Quicksort/links/09e415040f44330424000000.pdf}
+
+\bibitem{Wild15}
+Sebastian Wild, Markus E. Nebel, and Ralph Neininger,
+Average Case and Distributional Analysis of Dual-Pivot Quicksort,
+arXiv:1304.0988v3, Feb 2015
+
+\bibitem{Sedgewick75}
+Sedgewick, R.: Quicksort. PhD Thesis, Stanford University (1975)
+\end{thebibliography}
 \end{document}
