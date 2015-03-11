@@ -16,6 +16,7 @@
 \usepackage{listings}
 \usepackage{pgfplots}
 \usepackage{url}
+\usepackage{color}
 \usetikzlibrary{arrows,shapes,positioning,shadows,trees}
 
 %
@@ -42,6 +43,27 @@
 \renewcommand\footrulewidth{0.4pt}
 
 \setlength\parindent{0pt}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \tikzset{
     raw sort entry/.style={rectangle, thick, draw, node distance=1.5em, align=center},
@@ -81,45 +103,11 @@
   \end{center}
 }
 
-%
-% Create Problem Sections
-%
-
-\newcommand{\enterProblemHeader}[1]{
-    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
-    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
-}
-
-\newcommand{\exitProblemHeader}[1]{
-    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
-    \stepcounter{#1}
-    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
-}
-
 \setcounter{secnumdepth}{0}
 \newcounter{partCounter}
 \newcounter{homeworkProblemCounter}
 \setcounter{homeworkProblemCounter}{1}
 \nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
-
-%
-% Homework Problem Environment
-%
-% This environment takes an optional argument. When given, it will adjust the
-% problem counter. This is useful for when the problems given for your
-% assignment aren't sequential. See the last 3 problems of this template for an
-% example.
-%
-\newenvironment{homeworkProblem}[1][-1]{
-    \ifnum#1>0
-        \setcounter{homeworkProblemCounter}{#1}
-    \fi
-    \section{Problem \arabic{homeworkProblemCounter}}
-    \setcounter{partCounter}{1}
-    \enterProblemHeader{homeworkProblemCounter}
-}{
-    \exitProblemHeader{homeworkProblemCounter}
-}
 
 %
 % Homework Details
@@ -150,7 +138,6 @@
 }
 
 \author{\textbf{\hmwkAuthorName}}
-\date{}
 
 \renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
 
@@ -161,29 +148,7 @@
 % Useful for algorithms
 \newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
 
-% For derivatives
-\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
-
-% For partial derivatives
-\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
-
-% Integral dx
-\newcommand{\dx}{\mathrm{d}x}
-
-% Alias for the Solution section header
-\newcommand{\solution}{\textbf{\large Solution}}
-
-% Probability commands: Expectation, Variance, Covariance, Bias
-\newcommand{\E}{\mathrm{E}}
-\newcommand{\Var}{\mathrm{Var}}
-\newcommand{\Cov}{\mathrm{Cov}}
-\newcommand{\Bias}{\mathrm{Bias}}
-
 \begin{document}
-
-\pagebreak
-
-
 
 \section{Mergesort}
 Mergesort is a divide-and-conquer algorithm in which the unsorted array is recursively divided
@@ -754,8 +719,8 @@ grey box represents the pivot.}
 \end{figure}
 
 \section{Dual-Pivot Quicksort}
-The idea behind a dual pivot is that, if partitioning into two pieces leads to an efficient
-sort, then partitioning into three pieces could improve upon this efficiency. In 1975, Sedgewick
+If Quicksort is efficient by partitioning the data into two pieces, will partitioning the data into
+three pieces be even better? This is the idea behind a dual pivot. In 1975, Sedgewick
 proposed a dual pivot variation of Quicksort\cite{Sedgewick75}, but it turned out to be less
 efficient than Quicksort because of the additional overhead introduced by the second pivot.
 Until 2009, it was assumed that any other implementations of a dual pivot Quicksort would
@@ -784,16 +749,15 @@ Wild 2012\cite{Wild12} contends that Dual Pivot has, in fact, fewer comparisons 
 more swaps. A recent publication, Wild 2015\cite{Wild15} compares the number of byte code
 instructions of Quicksort with Yaroslavskiy's Dual Pivot algorithm and finds that the Dual Pivot
 algorithm requires more byte code instructions, on average. Wild's findings, both in 2012 and 2015,
-contradict Yaroslavskiy's measurements performed in 2009. The experimental findings led
-to it being incorporated into Java 7 seem to indicate that it is more efficient than Quicksort. But
-the reason for this efficiency seems to be somewhat in dispute, at least for the moment.
-In any case, this seems to be a topic for further discussion and research.
+contradict Yaroslavskiy's measurements performed in 2009. However, these same experimental 
+findings led to it being incorporated into Java 7, and seem to indicate that it is more efficient than 
+Quick sort. But the reason for this efficiency seems to be somewhat in dispute, at least for the moment. In any case, this seems to be a topic for further discussion and research.
 
 The actual Yaroslavskiy Dual Pivot Quicksort algorithm is somewhat complicated, and
-its implementation was beyond the scope of what we wanted to tackle in this paper. Therefore,
-we instead implemented a simplified version of the Dual Pivot Quicksort. The pseudocode for
-this algorithm is shows in Figure~\ref{pseudo-dualpivot}. Figure~\ref{example-dualpivot} contains 
-an example of an array sorted using its algorithm.
+its implementation was beyond the scope of what the authors wanted to tackle in this paper. 
+Instead, a simplified version of the Dual Pivot Quicksort was implemented. The pseudocode for
+this algorithm is shown in Figure~\ref{pseudo-dualpivot}. Figure~\ref{example-dualpivot} contains 
+an example of an array sorted with Dual Pivot Quicksort.
 
 \begin{figure}
 \begin{algorithmic}
@@ -805,7 +769,7 @@ an example of an array sorted using its algorithm.
 		\State $right \gets r$
 		\State $i \gets l + 1$
 		\If{$A[l] > A[r]$}
-			\State swap(Al], A[r])
+			\State swap(A[l], A[r])
 		\EndIf
 		\While{$i <= right$}
   			\If{$A[i] < A[l]$}
@@ -855,7 +819,9 @@ be swapped next.}
 \end{figure}
 
 \section{Three Way Quicksort}
-Dijkstra's Three Way Quicksort uses a single pivot, but partitions the elements into three different 
+Dijkstra's Three Way Quicksort is another variation of Quicksort that is particularly suited for
+inputs with many repeating elements. It uses a single pivot, but partitions the elements into 
+three different 
 sections. During the partition process, there are four parts: elements less than the pivot, elements 
 equal to the pivot, elements greater than the pivot, and the area not yet checked. An index 
 advances through the area not yet checked. There are three possibilities: if the value at the 
@@ -867,9 +833,9 @@ recursively done until the array has been sorted. When all elements have been pa
 Three Way Quicksort is called recursively on the subarray to the left of the pivot values
 and the subarray to the right of the pivot values. 
 
-In particular, this partition method handles inputs with many repeating elements. Instead of
-pivot values ending up on either side of the partition where they will need to be partitioned
-again, the pivot values end up in the middle of the array where they can be considered sorted.
+When used with inputs containing many repeating elements, the repeating pivot values
+end up in the middle of the two partitions instead of being mixed up in both partitions as it is
+with the classical Quicksort algorithm.
 Figure~\ref{pseudo-threeway} contains the pseudocode for Three Way Quicksort. 
 Figure~\ref{example-threeway} has an example of an array being sorted with Three Way
 Quicksort.
@@ -931,7 +897,6 @@ Quicksort.
 	\caption{Three Way Quicksort}\label{example-threeway}
 \end{figure}
 
-\pagebreak
 \section{Introsort}
 Introsort, invented by David Musser in 1997,  is another variation of Quicksort that takes a different 
 approach to solving Quicksort's
@@ -956,7 +921,9 @@ switches over the Heapsort, a slower but more reliable algorithm.
 This gives Introsort the best of both worlds; for most inputs, its speed nearly matches the
 speed of Quicksort (some overhead is used to track the recursive depth variable), but when
 the depth of recursion is great enough to indicate that Introsort is having trouble with the
-input, the program switches over to Heapsort to complete the sort.
+input, the program switches over to Heapsort to complete the sort. Introsort is the standard
+sorting algorithm used in some C++ libraries. See Figure~\ref{pseudo-introsort} for the 
+Introsort pseudocode.
 
 \begin{figure}
 \begin{algorithmic}
@@ -973,23 +940,428 @@ input, the program switches over to Heapsort to complete the sort.
 		\EndIf
 	\EndProcedure
 \end{algorithmic}
+\caption{Pseudocode for Introsort}
+\label{pseudo-introsort}
 \end{figure}
 
 \section{Implementation}
 This project involved the implementation of six different programs in Java: Mergesort,
 Heapsort, Quicksort, Dual Pivot Quicksort, Three Way Quicksort, and Introsort. Each
-program was tested against XXX types of inputs including pseudo-random numbers,
+program was tested against five types of inputs including pseudo-random numbers,
 sorted numbers, reverse sorted numbers, numbers with many repeats, and almost-sorted
-numbers.
+numbers. Our code is listed in the figures described below. When possible, the code has
+been abbreviated with details removed such as variable declaration and initialization. The
+core algorithm remains in each case. Each program was based upon existing Java code.
+The references are shown below.
 
-An abbreviated version of each program is shown in Figures~\ref{code-mergesort}-
-~\ref{code-introsort}. In each case, some details have been omitted for brevity including
-the declaration and initialization of variables.
+\subsection{Mergesort}
+Reference: JavaHungry\cite{JavaHungry}.
+Code: Figure~\ref{code-mergesort}.
 
-Dual Pivot:
-Typically dual-pivot uses insertion sort if 
-the length of the array is small, but because we were testing on large arrays, we left out this 
-implementation. 
+\subsection{Heapsort}
+The implementation of Heapsort was based upon several different sources before a final
+version was completed, but probably most resembles code from Princeton\cite{Princeton}.
+Code: Figure~\ref{code-heapsort}. 
+This implementation was also used in the Introsort program.
+
+\subsection{Quicksort}
+Reference: \textit{Cracking the Code}~\cite{McDowell}. 
+Code: Figure~\ref{code-quicksort}. 
+A somewhat modified version of it was used in the implementation of Introsort.
+
+\subsection{Dual Pivot Quicksort}
+Reference: DZone\cite{DZone}
+Code: Figure~\ref{code-dualpivot}. 
+Typically, Dual Pivot Quicksort uses insertion sort for small
+arrays. However, all of our test input consisted of large arrays of over 500,000 elements.
+Therefore we did not include the Insertion Sort component in our implementation.
+
+\subsection{Three Way Quicksort}
+Reference: DZone\cite{DZone}. 
+Code: Figure~\ref{code-threeway}
+
+\section{Testing}
+Each program was tested with a Python script that verified the output of the sorted array
+was in order. After this verification was completed, the programs merely output the
+measurement results timed using the Java ThreadMXBean library. This library allows
+the measurement of the running thread only, supposedly eliminating any overhead
+used by other threads such as the Java's garbage collector. ThreadMXBean gives
+measurement time in nanoseconds (although the accuracy of the measurement is 
+not that good). This time was converted to milliseconds for the purpose of this paper.
+
+The programs were also compared against code obtained from
+Princeton\cite{Princeton}. Although this is perhaps not the most rigorous of verification methods,
+the assumption was that the Princeton code was probably correct, although it may not be
+the most efficient implementation of the algorithm possible. Our purpose in performing
+our verification was to ensure that we had the overall algorithm implemented correctly
+without errors that would cause vastly different measurement results than expected. We 
+did not record the exact measurement results from this verification.
+
+We generated five different types of input arrays using Python scripts: Pseudo-random numbers
+(generated with Python's ``shuffle'' feature), Reverse Sorted numbers, Sorted numbers, 
+Repeating numbers (ten unique numbers repeated n/10 times), and Almost Sorted numbers
+(every 5 numbers was switched with its neighbor).
+
+Each input array was created with 500K, 1M, 5M, 10M, 25M, and 30M different numbers.
+A bash script was used to run each program with each input array 25 different times.
+Another program was written to determine whether any inputs were measurement outliers
+and, if so, to throw out the results before the remaining measurements were averaged 
+together. This program was based upon the algorithm found at WikiHow\cite{WikiHow}.
+The "inner fence" was used when considering whether or not to throw out the measurement
+result.
+
+\section{Measurement Results}
+Measurements were initially performed on Pseudo-Random numbers. Results are shown in Figure
+~\ref{graph-pseudo}. Although most of the measurements were as expected, the Heapsort
+algorithm produced measurements results much larger than expected. Fearing that our
+implementation had been implemented incorrectly, we tested the same numbers with two
+other Heapsort java programs from Princeton\cite{Princeton} and Sanfoundry\cite{Sanfoundry}.
+Those programs were only modified to work with the I/O library that we had created for use 
+with our own programs; none of the Heapsort code was modified. These programs were each
+run with 10,000,000 numbers ten times with the results averaged with the same averaging 
+program used with our programs. Average results showed that each program took about 15s
+to perform this sorting -- about the same amount of time as our Heapsort program. Although
+this may not be the most rigorous of verification methods, it convinced us that our algorithm
+was correct.
+
+\begin{figure}
+\centering
+\begin{minipage}[b]{0.50\linewidth}
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in seconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=50,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, .3)(1, .7)(5,5)(10,13)(15,20)(20,28)(25,37)(30,46)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, .2)(1, .3)(5, 2)(10,4)(15,7)(20,9)(25,12)(30,14)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,.1)(1,.2)(5,1)(10,3)(15,4)(20,6)(25,7)(30,9)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=cyan,
+    mark=diamond,
+    ]
+    coordinates {
+    (.5,.2)(1,.3)(5,2)(10,3)(15,5)(20,7)(25,9)(30,11)
+    };
+    \addlegendentry{Dual Pivot QS}
+\addplot[
+    color=black,
+    mark=star,
+    ]
+    coordinates {
+    (.5,.2)(1,.4)(5,2)(10,4)(15,7)(20,10)(25,12)(30,14)
+    };
+    \addlegendentry{Three Way QS}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,.2)(1,.3)(5,2)(10,4)(15,5)(20,7)(25,9)(30,11)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\caption{Pseudo-Random Numbers}
+\label{graph-pseudo}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.45\linewidth}
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=9000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 99)(1, 200)(5,1133)(10,2470)(15,3919)(20,5753)(25,7299)(30,8864)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5,69)(1,130)(5,678)(10,1463)(15,2216)(20,2964)(25,3845)(30,4612)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,72)(1,85)(5,205)(10,414)(15,699)(20,1176)(25,1577)(30,1506)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,71)(1,85)(5,215)(10,424)(15,714)(20,1225)(25,1627)(30,1532)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\caption{Reverse Sorted}
+\label{graph-reverse}
+\end{minipage}
+\end{figure}
+
+We also performed measurements using the Princeton\cite{Princeton} versions of Mergesort,
+Quick sort, Dual Pivot Quicksort, and Three Way Quicksort as a verification method to ensure
+our other algorithms were also correct. Again, this is not the most scientific of verification methods,
+but we were reasonably sure of the Princeton implementation and believe that if our
+implementation were wrong, the measurements times between Princeton's program and our
+program would be significantly different. Another possibility would have been to compare
+measurement times against versions of the sorting algorithms implemented in a standard
+library such as C++. However, we feared that those algorithms would be too optimized to
+provide a fair comparison against our relatively simple implementation of the algorithms.
+
+The next set of numbers measured were those in reverse sorted order. That is: 5, 4, 3, 2, 1.
+Measurement results are shown in Figure~\ref{graph-reverse}. Notice the lack of 
+measurement results from Dual-Pivot Quicksort and Three Way Quicksort. To our surprise,
+these algorithms could not handle reverse sorted arrays of any size over around 6000
+elements. Larger arrays would cause the program to blow its stack.
+
+To understand what was going on, we performed sorting of the array {10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+by hand. See Figure~\ref{example-dualpivot-reverse}. Our Dual Pivot algorithm merely
+switches the first and last elements at the beginning of the function, moves the index
+through the entire array without swapping anything else, and then calls the function again
+recursively. The next recursion level swaps the second and second-to-last elements in the
+array and then calls the function again recursively. Although this will eventually sort the 
+array correctly, the overhead introduced by all the recursive calls is excessive and will
+cause the program to blow the stack when exposed to arrays of any size. 
+
+Three Way Quicksort is even worse than Dual Pivot Quicksort. Instead of merely switching
+the first and last elements of the array, Three Way Quicksort bubbles the largest number
+from the left side of the array to the right side of the array and then recursively calls itself.
+In the next level, it bubbles the new left side of the array to its correct position just to the left of
+the right side of the array and so forth. This creates $n-1$ recursive calls, which is clearly a
+problem.
+
+In order to verify our implementation of Dual Pivot Quicksort and Three Way Quicksort, we
+downloaded and tested the Princeton\cite{Princeton} implementations against the same
+number set. The Princeton implementation suffered from the same problem. Upon further 
+investigation, we discovered that our implementation of Dual Pivot Quicksort was actually a simplified version of the algorithm created by Yaroslavskiy\cite{Yaroslavskiy}. His algorithm is
+quite a bit more complex and seems to cover more cases than our simplified algorithm.
+This also probably explains why our Dual Pivot measurement results from the pseudo-random
+numbers is slower than Quicksort, although he reported it to be a faster algorithm. Given
+more time, we would have attempted to implement a more complex algorithm closer to
+his implementation in order to verify his findings. However, given the time constraints on this
+project, we were merely note the problem found here and leave it for future investigation.
+
+\begin{figure}\begin{doublespace}
+\List{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+\List{1, 9, 8, 7, 6, 5, 4, 3, 2, 10}
+\List{1, 2, 8, 7, 6, 5, 4, 3, 9, 10}
+\List{1, 2, 3, 7, 6, 5, 4, 8, 9, 10}
+\end{doublespace}
+\caption{Dual Pivot Reverse Sort}
+\label{example-dualpivot-reverse}
+\end{figure}
+
+\begin{figure}\begin{doublespace}
+\List{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+\List{9, 8, 7, 6, 5, 4, 3, 2, 1, 10}
+\List{8, 7, 6, 5, 4, 3, 2, 1, 9, 10}
+\List{7, 6, 5, 4, 3, 2, 1, 8, 9, 10}
+\end{doublespace}
+\caption{Three Way Reverse Sort}
+\label{example-threeway-reverse}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}[b]{0.45\linewidth}
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=6000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 107)(1, 171)(5,978)(10,1717)(15,2728)(20,4122)(25,5245)(30,5903)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, 73)(1, 147)(5, 648)(10,1365)(15,2219)(20,2912)(25,3842)(30,4615)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,29)(1,45)(5,206)(10,348)(15,577)(20,879)(25,1206)(30,1218)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,30)(1,47)(5,219)(10,386)(15,617)(20,968)(25,1284)(30,1328)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\caption{Sorted Numbers}
+\label{graph-sorted}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.45\linewidth}
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=6000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 75)(1, 133)(5,681)(10,1374)(15,2060)(20,2748)(25,2873)(30,4046)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, 90)(1, 191)(5, 974)(10,1961)(15,2980)(20,3745)(25,4167)(30,5101)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,83)(1,105)(5,417)(10,881)(15,1283)(20,1799)(25,1897)(30,2431)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=cyan,
+    mark=diamond,
+    ]
+    coordinates {
+    (.5,46)(1,62)(5,188)(10,316)(15,499)(20,682)(25,688)(30,915)
+    };
+    \addlegendentry{Dual Pivot QS}
+\addplot[
+    color=black,
+    mark=star,
+    ]
+    coordinates {
+    (.5,33)(1,52)(5,163)(10,288)(15,457)(20,623)(25,689)(30,865)
+    };
+    \addlegendentry{Three Way QS}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,101)(1,111)(5,446)(10,889)(15,1368)(20,1818)(25,1952)(30,2616)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\caption{Duplicated}
+\end{minipage}
+\end{figure}
+
+The next set of numbers measured where the already-sorted numbers: 1, 2, 3, 4, 5, etc.
+See Figure~\ref{graph-sorted}.
+To our continued surprise, we ran into stack problems with the Dual Pivot Quicksort and
+Three Way Quicksort with this input set as well. Upon closer investigation, it seems that
+the Dual Pivot Quicksort algorithm does not perform any swaps. However, it iterates over
+the array and calls itself recursively with one less element until there is only one element
+in the array, for a total of $n-1$ recursive calls. Although no actual swaps are done, this
+will clearly result in the same stack problems as with the reverse-sorted numbers.
+
+Three Way Quicksort also has problems with already-sorted numbers. It is not as benign 
+as the Dual Pivot Quicksort algorithm: instead of merely iterating over the numbers without
+changing anything, Three Way Quicksort actually switches the numbers into an unsorted
+array before eventually sorting them back. The ordering does not make a clear pattern
+so we are not showing it here. However, this would be another area for future investigation:
+how could the Three Way Quicksort algorithm be altered to prevent this non-productive 
+behavior?
+
+The next test was with an array of duplicated numbers. This array was assembled by
+dividing $n$ by 10. Then the numbers 1 through 10 were added to the array, each repeating $n$
+times. Finally, we used the Python shuffle function to rearrange the elements in pseudo-random
+order. The test results are shown in Figure~\ref{graph-duplicated}. These results finally show
+the usefulness of the Dual Pivot Quicksort and Three Way Quicksort algorithms; they are 
+both significantly faster than the classic Quicksort algorithm as well as Heapsort and Mergesort.
+Interestingly enough, they produced almost identical measurement results.
+
+Finally, we tested with nearly sorted numbers. This list was generated with a sorted array
+of numbers. Then we iterated through the array and switched every fifth number with its 
+neighbor, thus creating a nearly-sorted list of numbers. Our results are shown in 
+Figure~\ref{graph-nearly}. Not surprisingly, both our Dual Pivot and Three Way Quicksort
+algorithms had trouble with this test. Three Way Quicksort actually produced measurement
+results for the first few test cases, but the testing time was so large that it can't fit easily
+on the same graph as the measurements from the other programs, so left it off.
+
+\section{Conclusion}
 
 The disadvantages are the same in that the worst case is ?(n2) and it is not a stable sort. An 
 additional problem seems to be dealing with very large arrays that are in sorted, reverse sorted, or 
@@ -1000,6 +1372,58 @@ implementation created by Princeton University and discovered that theirs blew u
 overflow as well. Clearly, this is useful for getting rid of quadratic scenarios with regular quicksort, 
 but it seems to be better used on totally random number, duplicate numbers, and smaller sorted 
 arrays.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={Numbers (in millions)},
+    ylabel={Time (in milliseconds)},
+    xmin=0, xmax=30,
+    ymin=0, ymax=6000,
+    xtick={0,5,10,15,20,25,30},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+    (.5, 94)(1, 172)(5,950)(10,1792)(15,2838)(20,4111)(25,5183)(30,6214)
+    };
+    \addlegendentry{Heapsort}
+\addplot[
+    color=red,
+    mark=otimes,
+    ]
+    coordinates {
+    (.5, 67)(1, 147)(5, 692)(10,1556)(15,2331)(20,2944)(25,3970)(30,4498)
+    };
+    \addlegendentry{Mergesort}
+\addplot[
+    color=green,
+    mark=triangle,
+    ]
+    coordinates {
+    (.5,30)(1,47)(5,227)(10,368)(15,613)(20,915)(25,1282)(30,1260)
+    };
+    \addlegendentry{Quicksort}
+\addplot[
+    color=olive,
+    mark=oplus,
+    ]
+    coordinates {
+    (.5,69)(1,70)(5,217)(10,433)(15,698)(20,1092)(25,1359)(30,1488)
+    };
+    \addlegendentry{Introsort}
+\end{axis}
+\end{tikzpicture}
+\caption{Nearly Sorted}
+\label{graph-nearly}
+\end{figure}
 
 Three Way Quicksort
 The advantages to the Three Way Quicksort is the same as dual sort, it is able to maintain 
@@ -1065,6 +1489,7 @@ private static void heapify(Integer[] nums,int root,int left,int right) {
 }
 \end{lstlisting}
 \caption{Abbreviated version of heapify phase of Heapsort}
+\label{code-heapsort}
 \end{figure}
 
 \begin{figure}
@@ -1077,9 +1502,8 @@ public void quicksort(int left,int right){
       while(nums[r]>pivot)
          --r;
       if(l<=r) {
-         swap(nums[l],nums[r])
-	++l;
-	--r;
+         swap(nums[l],nums[r]);
+	      ++l; --r;
       }
    }
    if(left < r)
@@ -1089,6 +1513,7 @@ public void quicksort(int left,int right){
 }
 \end{lstlisting}
 \caption{Abbreviated version of Quicksort}
+\label{code-quicksort}
 \end{figure}
 
 \begin{figure}
@@ -1099,15 +1524,14 @@ public void dual_pivot_qs(int left,int right){
    int r = right-1;
    int i = left+1;
    if(nums[left]>nums[right])
-      swap(nums[left],nums[right])
+      swap(nums[left],nums[right]);
    while(i <= r){
       if(nums[i] < nums[left]) {
-         swap(nums[i],nums[l]
-	 ++l;
-	 ++i;
+         swap(nums[i],nums[l];
+	    ++l; ++i;
       }
       else if(nums[right]<nums[i]) {
-         swap(nums[i],nums[r])
+         swap(nums[i],nums[r]);
          --r;
       }
       else
@@ -1130,8 +1554,7 @@ public void dual_pivot_qs(int left,int right){
 \begin{figure}
 \begin{lstlisting}
 public void three_way_qs(int left, int right){
-  if(left >= right)
-   return;
+  if(left >= right) return;
   int l = left;
   int r = right;
   int i = left + 1;		
@@ -1140,8 +1563,7 @@ public void three_way_qs(int left, int right){
   while(i <= r){
     if(nums[i] < pivotV) {
       swap(nums[i],nums[l]);
-      ++l;
-      ++i;
+      ++l; ++i;
     }
     else if(pivotV < nums[i]) {
       swap(nums[i], nums[r]);
@@ -1151,8 +1573,8 @@ public void three_way_qs(int left, int right){
       ++i;
     }
   }
-  quicksort(left, l - 1);
-  quicksort(r + 1, right);
+  three_way_qs(left, l - 1);
+  three_way_qs(r + 1, right);
 }
 \end{lstlisting}
 \caption{Abbreviated version of Three Way Quicksort}
@@ -1175,8 +1597,7 @@ public static void introsort(Integer[] input, int maxdepth, int left, int right)
         --r;
       if(l <= r) {
         swap(input[l], input[r]);
-        ++l;
-        --r;
+        ++l; --r;
       }
     }
     if(left < r)
@@ -1189,237 +1610,6 @@ public static void introsort(Integer[] input, int maxdepth, int left, int right)
 \label{code-introsort}
 \end{figure}
 
-\begin{figure}
-\begin{tikzpicture}
-\begin{axis}[
-    title={Sorting Pseudo-Random Numbers},
-    xlabel={Numbers (in millions)},
-    ylabel={Time (in seconds)},
-    xmin=0, xmax=30,
-    ymin=0, ymax=50,
-    xtick={0,5,10,15,20,25,30},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-]
- 
-\addplot[
-    color=blue,
-    mark=square,
-    ]
-    coordinates {
-    (.5, .3)(1, .7)(5,5)(10,13)(15,20)(20,28)(25,37)(30,46)
-    };
-    \addlegendentry{Heapsort}
-\addplot[
-    color=red,
-    mark=otimes,
-    ]
-    coordinates {
-    (.5, .2)(1, .3)(5, 2)(10,4)(15,7)(20,9)(25,12)(30,14)
-    };
-    \addlegendentry{Mergesort}
-\addplot[
-    color=green,
-    mark=triangle,
-    ]
-    coordinates {
-    (.5,.1)(1,.2)(5,1)(10,3)(15,4)(20,6)(25,7)(30,9)
-    };
-    \addlegendentry{Quicksort}
-\addplot[
-    color=cyan,
-    mark=diamond,
-    ]
-    coordinates {
-    (.5,.2)(1,.3)(5,2)(10,3)(15,5)(20,7)(25,9)(30,11)
-    };
-    \addlegendentry{Dual Pivot QS}
-\addplot[
-    color=black,
-    mark=star,
-    ]
-    coordinates {
-    (.5,.2)(1,.4)(5,2)(10,4)(15,7)(20,10)(25,12)(30,14)
-    };
-    \addlegendentry{Three Way QS}
-\addplot[
-    color=olive,
-    mark=oplus,
-    ]
-    coordinates {
-    (.5,.2)(1,.3)(5,2)(10,4)(15,5)(20,7)(25,9)(30,11)
-    };
-    \addlegendentry{Introsort}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-\begin{figure}
-\begin{tikzpicture}
-\begin{axis}[
-    title={Sorting Pre-Sorted Numbers},
-    xlabel={Numbers (in millions)},
-    ylabel={Time (in milliseconds)},
-    xmin=0, xmax=30,
-    ymin=0, ymax=6000,
-    xtick={0,5,10,15,20,25,30},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-]
- 
-\addplot[
-    color=blue,
-    mark=square,
-    ]
-    coordinates {
-    (.5, 107)(1, 171)(5,978)(10,1717)(15,2728)(20,4122)(25,5245)(30,5903)
-    };
-    \addlegendentry{Heapsort}
-\addplot[
-    color=red,
-    mark=otimes,
-    ]
-    coordinates {
-    (.5, 73)(1, 147)(5, 648)(10,1365)(15,2219)(20,2912)(25,3842)(30,4615)
-    };
-    \addlegendentry{Mergesort}
-\addplot[
-    color=green,
-    mark=triangle,
-    ]
-    coordinates {
-    (.5,29)(1,45)(5,206)(10,348)(15,577)(20,879)(25,1206)(30,1218)
-    };
-    \addlegendentry{Quicksort}
-\addplot[
-    color=olive,
-    mark=oplus,
-    ]
-    coordinates {
-    (.5,30)(1,47)(5,219)(10,386)(15,617)(20,968)(25,1284)(30,1328)
-    };
-    \addlegendentry{Introsort}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-\begin{figure}
-\begin{tikzpicture}
-\begin{axis}[
-    title={Reverse Sorted Numbers},
-    xlabel={Numbers (in millions)},
-    ylabel={Time (in milliseconds)},
-    xmin=0, xmax=30,
-    ymin=0, ymax=9000,
-    xtick={0,5,10,15,20,25,30},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-]
- 
-\addplot[
-    color=blue,
-    mark=square,
-    ]
-    coordinates {
-    (.5, 99)(1, 200)(5,1133)(10,2470)(15,3919)(20,5753)(25,7299)(30,8864)
-    };
-    \addlegendentry{Heapsort}
-\addplot[
-    color=red,
-    mark=otimes,
-    ]
-    coordinates {
-    (.5,69)(1,130)(5,678)(10,1463)(15,2216)(20,2964)(25,3845)(30,4612)
-    };
-    \addlegendentry{Mergesort}
-\addplot[
-    color=green,
-    mark=triangle,
-    ]
-    coordinates {
-    (.5,72)(1,85)(5,205)(10,414)(15,699)(20,1176)(25,1577)(30,1506)
-    };
-    \addlegendentry{Quicksort}
-\addplot[
-    color=olive,
-    mark=oplus,
-    ]
-    coordinates {
-    (.5,71)(1,85)(5,215)(10,424)(15,714)(20,1225)(25,1627)(30,1532)
-    };
-    \addlegendentry{Introsort}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-\begin{figure}
-\begin{tikzpicture}
-\begin{axis}[
-    title={Sorting Duplicated Numbers},
-    xlabel={Numbers (in millions)},
-    ylabel={Time (in milliseconds)},
-    xmin=0, xmax=30,
-    ymin=0, ymax=6000,
-    xtick={0,5,10,15,20,25,30},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-]
- 
-\addplot[
-    color=blue,
-    mark=square,
-    ]
-    coordinates {
-    (.5, 75)(1, 133)(5,681)(10,1374)(15,2060)(20,2748)(25,2873)(30,4046)
-    };
-    \addlegendentry{Heapsort}
-\addplot[
-    color=red,
-    mark=otimes,
-    ]
-    coordinates {
-    (.5, 90)(1, 191)(5, 974)(10,1961)(15,2980)(20,3745)(25,4167)(30,5101)
-    };
-    \addlegendentry{Mergesort}
-\addplot[
-    color=green,
-    mark=triangle,
-    ]
-    coordinates {
-    (.5,83)(1,105)(5,417)(10,881)(15,1283)(20,1799)(25,1897)(30,2431)
-    };
-    \addlegendentry{Quicksort}
-\addplot[
-    color=cyan,
-    mark=diamond,
-    ]
-    coordinates {
-    (.5,46)(1,62)(5,188)(10,316)(15,499)(20,682)(25,688)(30,915)
-    };
-    \addlegendentry{Dual Pivot QS}
-\addplot[
-    color=black,
-    mark=star,
-    ]
-    coordinates {
-    (.5,33)(1,52)(5,163)(10,288)(15,457)(20,623)(25,689)(30,865)
-    };
-    \addlegendentry{Three Way QS}
-\addplot[
-    color=olive,
-    mark=oplus,
-    ]
-    coordinates {
-    (.5,101)(1,111)(5,446)(10,889)(15,1368)(20,1818)(25,1952)(30,2616)
-    };
-    \addlegendentry{Introsort}
-\end{axis}
-\end{tikzpicture}
-\end{figure}
 
 \begin{thebibliography}{9}
 
@@ -1444,5 +1634,40 @@ arXiv:1304.0988v3, Feb 2015
 
 \bibitem{Sedgewick75}
 Sedgewick, R.: Quicksort. PhD Thesis, Stanford University (1975)
+
+\bibitem{JavaHungry}
+\emph{Merge Sort : Java Sorting Program Code along with Example},
+\url{http://javahungry.blogspot.com/2013/06/java-sorting-program-code-merge-sort.html},
+Accessed March 9, 2015
+
+\bibitem{Princeton}
+\emph{Heap.java},
+\url{http://algs4.cs.princeton.edu/24pq/Heap.java},
+Accessed March 9, 2015
+
+\bibitem{McDowell}
+Gayle Laakmann McDowell, 
+\emph{Cracking the Coding Interview: 150 Programming Questions and Solutions},
+5th Edition,
+CareerCup, 2011.
+
+\bibitem{DZone}
+Arun Manivannan,
+\emph{Algorithm of the Week: Quicksort - ThreeWay vs Dual Pivot},
+Dzone,
+\url{http://java.dzone.com/articles/algorithm-week-quicksort-three},
+Accessed March 9, 2015.
+
+\bibitem{WikiHow}
+WikiHow,
+\emph{How to Calculate Outliers},
+\url{http://www.wikihow.com/Calculate-Outliers},
+Accessed March 9, 2015.
+
+\bibitem{Sanfoundry},
+San foundry Technology Education Blog,
+\emph{Java Program to Implement Heap Sort},
+\url{http://www.sanfoundry.com/java-program-implement-heap-sort/},
+Accessed March 10, 2015.
 \end{thebibliography}
 \end{document}
