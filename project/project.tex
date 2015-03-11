@@ -150,6 +150,16 @@
 
 \begin{document}
 
+\section{Introduction}
+This paper discusses and compares several different ``good'' sorting
+algorithms. That is, algorithms with an efficiency class of $n\log n$
+including Heapsort, Mergesort, Quicksort, Dual Pivot Quicksort,
+Three Way Quicksort, and Introsort. A description of each algorithm is
+given as well as pseudo code and examples. Measurements were performed
+on implementations of each algorithm using integer arrays of pseudo-random,
+reverse sorted, presorted, repeating, and nearly sorted numbers ranging
+in size from 500,000 elements to 35,000,000 elements.
+
 \section{Mergesort}
 Mergesort is a divide-and-conquer algorithm in which the unsorted array is recursively divided
 in half until each subarray has only one element. After this phase is completed, the pieces are 
@@ -335,7 +345,7 @@ that is the process of being sorted. The tree below each list shows the correspo
 heap after the heapify process has been completed. The algorithm is complete when there is
 only one element left to heapify.
 
-To calculate the algorithmic efficiency of Heapsort, consider both phases of the algorithm.
+To calculate the worst case algorithmic efficiency of Heapsort, consider both phases of the algorithm.
 In the first phase, the array is heapified by iterating through each internal node and recursing
 through its children. Let $n$ be the number of nodes with $n = 2^{h+1} - 1$ where $h$ is the height 
 of the tree. When examining a node, two comparisons are made: 
@@ -658,8 +668,9 @@ of an array that has many repeating elements. As the example shows, when the piv
 that repeats many times, some of the sorts are unproductive, and the resulting array is
 not partitioned very well; there will be values equal to the pivot element in both subarrays.
 Because Quicksort does so poorly in this type of situation, several different variations of Quicksort
-were created to handle this particular situation: Dual Pivot Quicksort and Three Way Quicksort
-are two such variations.
+were created to handle this particular situation: Three Way Quicksort
+is one of these variations. Another variation that also handles repeating
+elements well is Dual Pivot Quicksort.
 
 \begin{figure}
 \begin{algorithmic}
@@ -736,11 +747,21 @@ During the partitioning phase, the array is divided into four parts:
 part one contains the elements less than the first pivot, part two contains the elements that are 
 greater than or equal to the first pivot and less than or equal to the second pivot, part three contains 
 the elements greater than the second pivot, and part four contains the elements that have not
-yet been examined. As the algorithm runs, the elements in part four are sorted into their proper
+yet been examined. See Figure ~\ref{example-dualsort-pivot}. As the algorithm runs, the elements in part four are sorted into their proper
 location (part one, part two, or part three) until part four is empty. The first pivot is then swapped 
 with the last element of part one and the second pivot is swapped with the first element of part 
 three. This partitioning is then performed recursively on each of the remaining three parts of the 
 array until the entire array has been sorted. 
+
+\begin{figure}
+\List{s2/3, s2/1, s2/2, s3/4, s3/6, s3/7, 6, 3, 4, 9, s1/9, s1/8}
+\caption{An array partitioned with dual pivots. The blue elements are
+less than the first pivot (4). The red elements are greater than or equal
+to the first pivot and less than or equal to the second pivot (7). 
+The orange elements are greater than the second pivot. The elements not
+colored have not been partitioned yet.}
+\label{example-dualsort-pivot}
+\end{figure}
 
 According to Yaroslavskiy 2009\cite{Yaroslavskiy09}, Dual Pivot Quicksort requires a fewer 
 average number of swaps than the classical Quicksort and thus is a more efficient algorithm.
@@ -758,6 +779,13 @@ its implementation was beyond the scope of what the authors wanted to tackle in 
 Instead, a simplified version of the Dual Pivot Quicksort was implemented. The pseudocode for
 this algorithm is shown in Figure~\ref{pseudo-dualpivot}. Figure~\ref{example-dualpivot} contains 
 an example of an array sorted with Dual Pivot Quicksort.
+
+The overall efficiency of Dual Pivot Quicksort is the same as the classical
+Quicksort. According to both Yaroslavskiy\cite{Yaroslavskiy09} and 
+Wild\cite{Wild15} (although not the findings of the measurements 
+reported in this research paper), Dual Pivot Quicksort is overall faster
+than classical Quicksort. However, this is only by a constant factor and
+does not significantly alter the efficiency of the algorithm. 
 
 \begin{figure}
 \begin{algorithmic}
@@ -824,7 +852,8 @@ inputs with many repeating elements. It uses a single pivot, but partitions the 
 three different 
 sections. During the partition process, there are four parts: elements less than the pivot, elements 
 equal to the pivot, elements greater than the pivot, and the area not yet checked. An index 
-advances through the area not yet checked. There are three possibilities: if the value at the 
+advances through the area not yet checked. See Figure~\ref{example-threeway-pivot}. As the algorithm iterates through the array, there are three 
+possibilities: if the value at the 
 index is less than the pivot value, the value at the index is swapped with the value at the 
 left boundary and both the left boundary and the index are incremented. If the index value is 
 greater than the pivot, it is swapped with the value at the right boundary, and the right boundary
@@ -833,12 +862,28 @@ recursively done until the array has been sorted. When all elements have been pa
 Three Way Quicksort is called recursively on the subarray to the left of the pivot values
 and the subarray to the right of the pivot values. 
 
+
+\begin{figure}
+\List{s2/3, s2/1, s2/2, s3/4, s3/4, s3/4, 6, 3, 4, 9, s1/5, s1/8}
+\caption{An array partitioned with dual pivots. The blue elements are
+less than the pivot (4). The red elements are equal to the pivot, 
+The orange elements are greater than the pivot. The elements not
+colored have not been partitioned yet.}
+\label{example-threeway-pivot}
+\end{figure}
+
 When used with inputs containing many repeating elements, the repeating pivot values
 end up in the middle of the two partitions instead of being mixed up in both partitions as it is
 with the classical Quicksort algorithm.
 Figure~\ref{pseudo-threeway} contains the pseudocode for Three Way Quicksort. 
 Figure~\ref{example-threeway} has an example of an array being sorted with Three Way
 Quicksort.
+
+Like Quicksort, Three Way Quicksort does not significantly alter the algorithm,
+although it does introduce some overhead in keeping track of three partitions
+instead of two. Depending upon the input, Three Way Quicksort is either
+faster or slower than classical Quicksort, but they are still in the same
+overall efficiency class.
 
 \begin{figure}
 \begin{algorithmic}
@@ -898,7 +943,7 @@ Quicksort.
 \end{figure}
 
 \section{Introsort}
-Introsort, invented by David Musser in 1997,  is another variation of Quicksort that takes a different 
+Introsort, invented by David Musser in 1997, is another variation of Quicksort that takes a different 
 approach to solving Quicksort's
 shortcomings. Instead of modifying Quicksort to handle the specific inputs for which Quicksort
 is particularly bad, Introsort handles the recursion problem itself. That is, there are inputs that
@@ -916,14 +961,21 @@ not that input will cause this stack problem, Introsort was created to handle th
 itself.
 That is, a variable is passed to each call in order to keep track of the recursive depth. When
 this depth exceeds a particular value (usually related to $\log_2$ of the original $n$, the sort 
-switches over the Heapsort, a slower but more reliable algorithm.
+switches over the Heapsort, a slower but more reliable algorithm that iterates
+through the element arrays instead of creating recursive calls.
 
 This gives Introsort the best of both worlds; for most inputs, its speed nearly matches the
 speed of Quicksort (some overhead is used to track the recursive depth variable), but when
 the depth of recursion is great enough to indicate that Introsort is having trouble with the
 input, the program switches over to Heapsort to complete the sort. Introsort is the standard
 sorting algorithm used in some C++ libraries. See Figure~\ref{pseudo-introsort} for the 
-Introsort pseudocode.
+Introsort pseudocode. No example was included with Introsort since it
+merely uses Quicksort or a combination of Quicksort and Heapsort to
+perform its sorting. A small amount of overhead is introduced to Introsort
+in order to keep track of the recursion level, but that should not affect
+measurement results to any significant degree. Please see the description of
+Quicksort and Heapsort for more information on the efficiency of those
+algorithms.
 
 \begin{figure}
 \begin{algorithmic}
@@ -949,7 +1001,7 @@ This project involved the implementation of six different programs in Java: Merg
 Heapsort, Quicksort, Dual Pivot Quicksort, Three Way Quicksort, and Introsort. Each
 program was tested against five types of inputs including pseudo-random numbers,
 sorted numbers, reverse sorted numbers, numbers with many repeats, and almost-sorted
-numbers. Our code is listed in the figures described below. When possible, the code has
+numbers. Our code is listed in the figure at the end of the paper. When possible, the code has
 been abbreviated with details removed such as variable declaration and initialization. The
 core algorithm remains in each case. Each program was based upon existing Java code.
 The references are shown below.
@@ -979,6 +1031,12 @@ Therefore we did not include the Insertion Sort component in our implementation.
 \subsection{Three Way Quicksort}
 Reference: DZone\cite{DZone}. 
 Code: Figure~\ref{code-threeway}
+
+\subsection{Introsort}
+Reference: The introsort code was taken from both the Quicksort~\cite{McDowell}
+and Heapsort~\cite{Princeton} implementations with an extra parameter added
+into the Quicksort function calls to keep track of the recursion level.
+code: Figure~\ref{code-introsort}
 
 \section{Testing}
 Each program was tested with a Python script that verified the output of the sorted array
@@ -1022,7 +1080,9 @@ run with 10,000,000 numbers ten times with the results averaged with the same av
 program used with our programs. Average results showed that each program took about 15s
 to perform this sorting -- about the same amount of time as our Heapsort program. Although
 this may not be the most rigorous of verification methods, it convinced us that our algorithm
-was correct.
+was correct. Also note that, although the graph in~\ref{graph-pseudo} was
+scaled in order to best fit the data set, it's somewhat deceptive in
+the shape of its curve. 
 
 \begin{figure}
 \centering
@@ -1155,6 +1215,32 @@ measurement times against versions of the sorting algorithms implemented in a st
 library such as C++. However, we feared that those algorithms would be too optimized to
 provide a fair comparison against our relatively simple implementation of the algorithms.
 
+Figure~\ref{graph-pseudo} illustrates the differences that can arise, even
+between algorithms within the same efficiency class. Each of the algorithms
+tested as part of this research problem have an average efficiency class
+of $n \log n$. However, as shown in Figure~\ref{graph-pseudo}, this can
+produce measurement results that vary greatly, even when the same data
+set is used for each test. This can be explained by looking closer at the
+constants. Heapsort requires $1.5 n log n + O(n)$ comparisons in the
+worst case\cite{Mehlhorn} whereas Mergesort requires 
+$n \lceil\log n\rceil - 2^{\lceil \log n \rceil} + 1$ 
+comparisons in the worst case\cite{knuth}. Although in most cases, the
+largest factor in a complexity equation will far outweight the smaller
+factors or a constant multifier, in some cases, particularly with smaller
+numbers, this will not always be the case. 
+
+We did not implement a version of Insertion Sort, but in most implementations
+of Quicksort, smaller arrays are actually sorted with Insertion Sort
+instead of Quicksort. This is because Quicksort involves a certain amount of
+overhead in partitioning the arrays and the recursion involved in coming
+to a final solution. The smaller factors and the constants make a significant
+impact on smaller arrays and thus is more efficient in some cases, even
+though Quicksort has the better overall efficiency class. Therefore,
+when evaluating algorithms, it's important to look deeper than just the
+efficiency class, as illustrated by our measurements. Picking an algorithm
+that will work well with the input data can be even more important than
+the efficiency class of the possible algorithmic choices. 
+
 The next set of numbers measured were those in reverse sorted order. That is: 5, 4, 3, 2, 1.
 Measurement results are shown in Figure~\ref{graph-reverse}. Notice the lack of 
 measurement results from Dual-Pivot Quicksort and Three Way Quicksort. To our surprise,
@@ -1180,13 +1266,10 @@ problem.
 In order to verify our implementation of Dual Pivot Quicksort and Three Way Quicksort, we
 downloaded and tested the Princeton\cite{Princeton} implementations against the same
 number set. The Princeton implementation suffered from the same problem. Upon further 
-investigation, we discovered that our implementation of Dual Pivot Quicksort was actually a simplified version of the algorithm created by Yaroslavskiy\cite{Yaroslavskiy}. His algorithm is
+investigation, we discovered that our implementation of Dual Pivot Quicksort was actually a simplified version of the algorithm created by Yaroslavskiy\cite{Yaroslavskiy09}. His algorithm is
 quite a bit more complex and seems to cover more cases than our simplified algorithm.
 This also probably explains why our Dual Pivot measurement results from the pseudo-random
-numbers is slower than Quicksort, although he reported it to be a faster algorithm. Given
-more time, we would have attempted to implement a more complex algorithm closer to
-his implementation in order to verify his findings. However, given the time constraints on this
-project, we were merely note the problem found here and leave it for future investigation.
+numbers is slower than Quicksort, although he reported it to be a faster algorithm. 
 
 \begin{figure}\begin{doublespace}
 \List{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
@@ -1206,6 +1289,44 @@ project, we were merely note the problem found here and leave it for future inve
 \end{doublespace}
 \caption{Three Way Reverse Sort}
 \label{example-threeway-reverse}
+\end{figure}
+
+In particular, Yaroslavskiy's algorithm contains the code found in
+Figure~\ref{pseudo-yaroslavskiy}. According to Wild~\cite{Wild15},
+the interaction between lines~\ref{yaro1}-\ref{yaro2} and 
+lines~\ref{yaro3}-\ref{yaro4} minimizes the comparisons needed to partition the array. 
+Our simplified implementation has removed some of these lines, which may
+explain why our results are not as good as his.
+Given more time, we would have attempted to implement a more complex algorithm closer to
+his implementation in order to verify his findings. However, with the time constraints on this
+project, we will merely note the problem found here and leave it for future investigation.
+
+\begin{figure}
+\begin{algorithmic}[1]
+	\While{$k \le g$}
+                \If{$A[k] < p$} \label{yaro1}
+			\State $swap(A[k], A[l])$
+			\State $l \gets l + 1$
+ 		\Else
+			\If{$A[k] \ge q$} \label{yaro2}
+				\While{$A[g] > q \text{ and } k < g$} \label{yaro3}
+               			 	\State $g \gets g - 1$ \label{yaro4}
+                       	 	\EndWhile
+				\If{$A[g] > p$}
+					\State $swap(A[k], A[g])$
+				\Else
+					\State $swap(A[k], A[g])$
+					\State $swap(A[k], A[l])$
+					\State $l \gets l + 1$
+				\EndIf
+				\State $g \gets g - 1$
+			\EndIf
+		\EndIf
+		\State $k \gets k + 1$
+	\EndWhile	
+\end{algorithmic}
+\caption{Partial Pseudocode for Yaroslavskiy's Dual Pivot Quicksort}
+\label{pseudo-yaroslavskiy}
 \end{figure}
 
 \begin{figure}
@@ -1325,10 +1446,11 @@ project, we were merely note the problem found here and leave it for future inve
 \end{axis}
 \end{tikzpicture}
 \caption{Duplicated}
+\label{graph-duplicated}
 \end{minipage}
 \end{figure}
 
-The next set of numbers measured where the already-sorted numbers: 1, 2, 3, 4, 5, etc.
+The next set of numbers measured were the already-sorted numbers: 1, 2, 3, 4, 5, etc.
 See Figure~\ref{graph-sorted}.
 To our continued surprise, we ran into stack problems with the Dual Pivot Quicksort and
 Three Way Quicksort with this input set as well. Upon closer investigation, it seems that
@@ -1359,19 +1481,46 @@ neighbor, thus creating a nearly-sorted list of numbers. Our results are shown i
 Figure~\ref{graph-nearly}. Not surprisingly, both our Dual Pivot and Three Way Quicksort
 algorithms had trouble with this test. Three Way Quicksort actually produced measurement
 results for the first few test cases, but the testing time was so large that it can't fit easily
-on the same graph as the measurements from the other programs, so left it off.
+on the same graph as the measurements from the other programs, 
+so we left it off.
+
+Originally, we had plans to create a sixth number set designed specifically
+to cause Quicksort to make too many recursive calls while showing off the
+value of Introsort, which goes into Heapsort mode after a certain amount
+of recursion. However, we ran out of time and were not able to complete
+this exercise. 
 
 \section{Conclusion}
+In conclusion, it seems clear that Quicksort is still the winner when it 
+comes to sorting most data. Although it has trouble with duplicated data
+and can run into trouble if the input array causes a large amount of 
+recursion, in most cases it can perform sorts of very large amounts of
+data in a relatively short amount of time. 
 
-The disadvantages are the same in that the worst case is ?(n2) and it is not a stable sort. An 
-additional problem seems to be dealing with very large arrays that are in sorted, reverse sorted, or 
-nearly sorted order. We discovered that dual-pivot quicksort suffered stack overflow at a fairly low 
-array size (several thousand) and was unable to sort any of the lists that we used due to their size 
-and the number of recursive calls that needed to be made.  We checked this issue with an 
-implementation created by Princeton University and discovered that theirs blew up with stack 
-overflow as well. Clearly, this is useful for getting rid of quadratic scenarios with regular quicksort, 
-but it seems to be better used on totally random number, duplicate numbers, and smaller sorted 
-arrays.
+Although some algorithms are available that can give an incremental
+improvement, particularly for certain input data sets, Quicksort is
+still far better than most other sorting algorithms available. However,
+if sorting needs to be performed on multiple aspects of an object,
+such as directory-type sorting by both first and last name, Mergesort
+will be a better choice since, unlike Quicksort, it provides a stable
+sort. 
+
+If it's known that the problem set will contain a large amount of duplicated
+data that needs to be sorted (like genetic codes), then a variation of
+Quicksort such as Dual Pivot Quicksort or Three Way Quicksort would
+probably be more suitable. When the input data cannot be known ahead of
+time, such as in a standard sorting library, Introsort may be the best
+compromise in order to prevent situations in which Quicksort results
+in deep recursion.
+
+With respect to the findings in this research project, we are unable to
+recommend Dual Pivot Quicksort or Three Way Quicksort at this time when
+it's possible that the input data will contain pre-sorted data, almost
+sorted data, or reverse sorted sorted data. In all cases, those 
+algorithms performed particularly badly and were unable to complete
+most of our large data sets. However, it's possible that these algorithms
+could be (and have been) improved to handle these cases gracefully.
+Further investigation needs to be performed in this area. 
 
 \begin{figure}
 \centering
@@ -1425,21 +1574,6 @@ arrays.
 \label{graph-nearly}
 \end{figure}
 
-Three Way Quicksort
-The advantages to the Three Way Quicksort is the same as dual sort, it is able to maintain 
-?(nlogn) in situations where regular quicksort would have ?(n2). It is also sorted in place with e space 
-complexity of ?(1) and maintains ?(nlogn) complexity in the average case.
-
-The disadvantages of 3-way quicksort are that it is also not a stable sort, and it also faces some, but not
-all, of the issues that Dual-Pivot sort faces with very large sorted numbers. 3-way quicksort was able to 
-
-sort reverse numbers, but had stack overflow on sorted numbers, just like dual-pivot quicksort did. It 
-
-was able to handle nearly sorted arrays, but ended with stack overflow when the array size increased to 
-15 million. This is another algorithm that is more useful than regular quicksort in certain scenarios, but 
-
-would be unable to keep up if very large arrays of potentially sorted data needed to be checked.
- 
 \begin{figure}
 \begin{lstlisting}
 public static Integer[] mergesort(Integer[] nums) { 
@@ -1669,5 +1803,17 @@ San foundry Technology Education Blog,
 \emph{Java Program to Implement Heap Sort},
 \url{http://www.sanfoundry.com/java-program-implement-heap-sort/},
 Accessed March 10, 2015.
+
+\bibitem{Mehlhorn}
+Mehlhorn, Kurt; Sanders, Peter (2008), 
+\emph{Algorithms and data structures: The basic toolbox},
+Springer. p. 142.
+
+\bibitem{knuth}
+Donald Knuth, 
+\emph{The Art of Computer Programming},
+Addison-Wedley,
+1968.
+
 \end{thebibliography}
 \end{document}
