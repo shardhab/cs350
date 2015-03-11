@@ -8,6 +8,8 @@
 
 import sort_tools.SortIO;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.Scanner;
 
 /* Class HeapSort */
@@ -59,6 +61,7 @@ public class HeapSort
     /* Main method */
     public static void main(String[] args)
     {
+        ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
         Integer[] nums;
 
         if (args.length != 2) {
@@ -70,9 +73,10 @@ public class HeapSort
             String output = args[1];
             SortIO tools = new SortIO();
             nums = tools.getData(input);
-            HeapSort.sort(nums);
-            tools.writeData(nums, output);
-            //tools.writeMeas(start, stop, output);
+            long start = thMxB.getCurrentThreadCpuTime();
+            Heap.sort(nums);
+            long stop = thMxB.getCurrentThreadCpuTime();
+            tools.writeMeas(start, stop, output);
         } catch (Exception ex) {
             System.out.print(ex.toString());
         }
