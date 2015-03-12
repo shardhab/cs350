@@ -1,65 +1,72 @@
-import sort_tools.SortIO;
-
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-
 /*************************************************************************
- *  Compilation:  javac QuickDualPivot.java
- *  Execution:    java QuickDualPivot < input.txt
+ *  Compilation:  javac Quick3way.java
+ *  Execution:    java Quick3way < input.txt
  *  Dependencies: StdOut.java StdIn.java
  *  Data files:   http://algs4.cs.princeton.edu/23quicksort/tiny.txt
  *                http://algs4.cs.princeton.edu/23quicksort/words3.txt
  *   
- *  Sorts a sequence of strings from standard input using dual-pivot
- *  quicksort.
- *
- *  [Warning: not thoroughly tested.]
+ *  Sorts a sequence of strings from standard input using 3-way quicksort.
  *   
  *  % more tiny.txt
  *  S O R T E X A M P L E
  *
- *  % java QuickDualPivot < tiny.txt
+ *  % java Quick3way < tiny.txt
  *  A E E L M O P R S T X                 [ one string per line ]
  *    
  *  % more words3.txt
  *  bed bug dad yes zoo ... all bad yet
  *  
- *  % java QuickDualPivot < words3.txt
+ *  % java Quick3way < words3.txt
  *  all bad bed bug dad ... yes yet zoo    [ one string per line ]
  *
  *************************************************************************/
 
-public class QuickDualPivot {
+import sort_tools.SortIO;
 
-    // quicksort the array a[] using dual-pivot quicksort
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+
+/**
+ *  The <tt>Quick3way</tt> class provides static methods for sorting an
+ *  array using quicksort with 3-way partitioning.
+ *  <p>
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/21elementary">Section 2.1</a> of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
+public class Quick3way {
+
+    // This class should not be instantiated.
+    private Quick3way() { }
+
+    /**
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     */
     public static void sort(Comparable[] a) {
         //StdRandom.shuffle(a);
         sort(a, 0, a.length - 1);
         assert isSorted(a);
     }
 
-    // quicksort the subarray a[lo .. hi] using dual-pivot quicksort
+    // quicksort the subarray a[lo .. hi] using 3-way partitioning
     private static void sort(Comparable[] a, int lo, int hi) { 
         if (hi <= lo) return;
-
-        // make sure a[lo] <= a[hi]
-        if (less(a[hi], a[lo])) exch(a, lo, hi);
-
-        int lt = lo + 1, gt = hi - 1;
-        int i = lo + 1;
+        int lt = lo, gt = hi;
+        Comparable v = a[lo];
+        int i = lo;
         while (i <= gt) {
-            if       (less(a[i], a[lo])) exch(a, lt++, i++);
-            else if  (less(a[hi], a[i])) exch(a, i, gt--);
-            else                         i++;
+            int cmp = a[i].compareTo(v);
+            if      (cmp < 0) exch(a, lt++, i++);
+            else if (cmp > 0) exch(a, i, gt--);
+            else              i++;
         }
-        exch(a, lo, --lt);
-        exch(a, hi, ++gt);
 
-        // recursively sort three subarrays
+        // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]. 
         sort(a, lo, lt-1);
-        if (less(a[lt], a[gt])) sort (a, lt+1, gt-1);
         sort(a, gt+1, hi);
-
         assert isSorted(a, lo, hi);
     }
 
@@ -74,12 +81,18 @@ public class QuickDualPivot {
         return (v.compareTo(w) < 0);
     }
 
+    // does v == w ?
+    private static boolean eq(Comparable v, Comparable w) {
+        return (v.compareTo(w) == 0);
+    }
+        
     // exchange a[i] and a[j]
     private static void exch(Object[] a, int i, int j) {
         Object swap = a[i];
         a[i] = a[j];
         a[j] = swap;
     }
+
 
    /***********************************************************************
     *  Check if array is sorted - useful for debugging
@@ -103,13 +116,16 @@ public class QuickDualPivot {
         }
     }
 
-    // Read strings from standard input, sort them, and print.
+    /**
+     * Reads in a sequence of strings from standard input; 3-way
+     * quicksorts them; and prints them to standard output in ascending order. 
+     */
     public static void main(String[] args) {
         ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
         Integer[] nums;
 
         if (args.length != 2) {
-            System.out.print("Usage: heapsort <input file> <output file>");
+            System.out.print("Usage: quick3way <input file> <output file>");
             System.exit(1);
         }
         try {
@@ -118,7 +134,7 @@ public class QuickDualPivot {
             SortIO tools = new SortIO();
             nums = tools.getData(input);
             long start = thMxB.getCurrentThreadCpuTime();
-            QuickDualPivot.sort(nums);
+            Quick3way.sort(nums);
             long stop = thMxB.getCurrentThreadCpuTime();
             tools.writeMeas(start, stop, output);
         } catch (Exception ex) {
