@@ -1,5 +1,8 @@
 import sort_tools.SortIO;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+
 /*************************************************************************
  *  Compilation:  javac QuickDualPivot.java
  *  Execution:    java QuickDualPivot < input.txt
@@ -102,9 +105,7 @@ public class QuickDualPivot {
 
     // Read strings from standard input, sort them, and print.
     public static void main(String[] args) {
-//        String[] a = StdIn.readAllStrings();
-//        QuickDualPivot.sort(a);
-//        show(a);
+        ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
         Integer[] nums;
 
         if (args.length != 2) {
@@ -116,9 +117,10 @@ public class QuickDualPivot {
             String output = args[1];
             SortIO tools = new SortIO();
             nums = tools.getData(input);
+            long start = thMxB.getCurrentThreadCpuTime();
             QuickDualPivot.sort(nums);
-            tools.writeData(nums, output);
-            //tools.writeMeas(start, stop, output);
+            long stop = thMxB.getCurrentThreadCpuTime();
+            tools.writeMeas(start, stop, output);
         } catch (Exception ex) {
             System.out.print(ex.toString());
         }

@@ -23,6 +23,9 @@
 
 import sort_tools.SortIO;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+
 /**
  *  The <tt>Quick3way</tt> class provides static methods for sorting an
  *  array using quicksort with 3-way partitioning.
@@ -118,9 +121,7 @@ public class Quick3way {
      * quicksorts them; and prints them to standard output in ascending order. 
      */
     public static void main(String[] args) {
-//        String[] a = StdIn.readAllStrings();
-//        Quick3way.sort(a);
-//        show(a);
+        ThreadMXBean thMxB = ManagementFactory.getThreadMXBean();
         Integer[] nums;
 
         if (args.length != 2) {
@@ -132,9 +133,10 @@ public class Quick3way {
             String output = args[1];
             SortIO tools = new SortIO();
             nums = tools.getData(input);
+            long start = thMxB.getCurrentThreadCpuTime();
             Quick3way.sort(nums);
-            tools.writeData(nums, output);
-            //tools.writeMeas(start, stop, output);
+            long stop = thMxB.getCurrentThreadCpuTime();
+            tools.writeMeas(start, stop, output);
         } catch (Exception ex) {
             System.out.print(ex.toString());
         }
